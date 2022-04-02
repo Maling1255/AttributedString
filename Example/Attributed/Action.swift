@@ -11,9 +11,21 @@ import UIKit
 extension AttributeStringItem {
     
     public struct Action {
+        /// 触发类型
+        let trigger: Trigger
+        /// 高亮属性
+        let highlights: [Highlight]
+        /// 触发回调
+        let callback: (Result) -> Void
         
+        internal var handle: (() -> Void)?
+        
+        public init(_ trigger: Trigger = .click, highlights: [Highlight] = .defalut, with callback: @escaping (Result) -> Void) {
+            self.trigger = trigger
+            self.highlights = highlights
+            self.callback = callback
+        }
     }
-    
 }
 
 extension AttributeStringItem.Action {
@@ -43,10 +55,16 @@ extension AttributeStringItem.Action.Result {
     }
 }
 
+extension NSAttributedString.Key {
+    
+    static let action = NSAttributedString.Key("com.attributed.string.action")
+}
+
 extension AttributeStringItem.Attribute {
     
     public typealias Action = AttributeStringItem.Action
     public typealias Result = Action.Result
+    public typealias Trigger = Action.Trigger
     
     public static func action(_ value: @escaping () -> Void) -> Self {
         return action { _ in value() }
@@ -75,6 +93,49 @@ extension AttributeStringItem.Attribute {
     public static func action(_ value: Action) -> Self {
         return .init(attributes: [.action: value])
     }
+}
+
+extension AttributeStringItem.Action.Highlight {
+        
+    public static func foreground(_ value: UIColor) -> Self {
+        return .init(attributes: [.foregroundColor: value])
+    }
+    
+    public static func background(_ value: UIColor) -> Self {
+        return .init(attributes: [.backgroundColor: value])
+    }
+    
+    public static func strikethrough(_ style: NSUnderlineStyle, color: UIColor? = nil) -> Self {
+        var temp: [NSAttributedString.Key: Any] = [:]
+        temp[.strikethroughColor] = color
+        temp[.strikethroughStyle] = style.rawValue
+        return .init(attributes: temp)
+    }
+    
+    public static func underline(_ style: NSUnderlineStyle, color: UIColor? = nil) -> Self {
+        var temp: [NSAttributedString.Key: Any] = [:]
+        temp[.underlineColor] = color
+        temp[.underlineStyle] = style.rawValue
+        return .init(attributes: temp)
+    }
+    
+    public static func shadow(_ value: NSShadow) -> Self {
+        return .init(attributes: [.shadow: value])
+    }
+    
+    public static func stroke(_ width: CGFloat = 0, color: UIColor? = nil) -> Self {
+        var temp: [NSAttributedString.Key: Any] = [:]
+        temp[.strokeColor] = color
+        temp[.strokeWidth] = width
+        return .init(attributes: temp)
+    }
+}
+
+public extension Array where Element == AttributeStringItem.Action.Highlight {
+    
+    static var defalut: [AttributeStringItem.Action.Highlight] = [.foreground(#colorLiteral(red: 0.01680417731, green: 0.1983509958, blue: 1, alpha: 1)), .underline(.single)]
+    
+    static let empty: [AttributeStringItem.Action.Highlight] = []
 }
 
 
