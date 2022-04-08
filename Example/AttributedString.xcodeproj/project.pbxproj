@@ -15,7 +15,13 @@
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		C18580CB0CF493F6FDF93CF4 /* Pods_AttributedString_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44A20AFD28658AF60147B0D6 /* Pods_AttributedString_Example.framework */; };
-		F86425F827F19E10002AD9E1 /* FontController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86425F727F19E10002AD9E1 /* FontController.swift */; };
+		F83CFE9727FD2F4000BD0210 /* Checking.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83CFE9627FD2F4000BD0210 /* Checking.swift */; };
+		F83CFE9A27FD3EE300BD0210 /* ActionQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83CFE9927FD3EE300BD0210 /* ActionQueue.swift */; };
+		F83CFE9C27FD6B5900BD0210 /* ArrayExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83CFE9B27FD6B5900BD0210 /* ArrayExtension.swift */; };
+		F83CFE9E280034C400BD0210 /* UIlabelExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83CFE9D280034C400BD0210 /* UIlabelExtension.swift */; };
+		F83CFEA02800385200BD0210 /* AttributedListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83CFE9F2800385200BD0210 /* AttributedListController.swift */; };
+		F83CFEA228003E7D00BD0210 /* FontController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83CFEA128003E7D00BD0210 /* FontController.swift */; };
+		F86425F827F19E10002AD9E1 /* AttributedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86425F727F19E10002AD9E1 /* AttributedController.swift */; };
 		F864260627F1AA47002AD9E1 /* Attributed.swift in Sources */ = {isa = PBXBuildFile; fileRef = F864260427F1AA47002AD9E1 /* Attributed.swift */; };
 		F864260727F1AA47002AD9E1 /* AttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = F864260527F1AA47002AD9E1 /* AttributedString.swift */; };
 		F864260927F53FC7002AD9E1 /* Attachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = F864260827F53FC7002AD9E1 /* Attachment.swift */; };
@@ -57,7 +63,13 @@
 		A20643F4289A489239E31333 /* Pods-AttributedString_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AttributedString_Example.debug.xcconfig"; path = "Target Support Files/Pods-AttributedString_Example/Pods-AttributedString_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		AA9F3357CCD2DC3F74FA8824 /* Pods-AttributedString_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AttributedString_Example.release.xcconfig"; path = "Target Support Files/Pods-AttributedString_Example/Pods-AttributedString_Example.release.xcconfig"; sourceTree = "<group>"; };
 		C5760C4B6E16A7A5E96C3F76 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		F86425F727F19E10002AD9E1 /* FontController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontController.swift; sourceTree = "<group>"; };
+		F83CFE9627FD2F4000BD0210 /* Checking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checking.swift; sourceTree = "<group>"; };
+		F83CFE9927FD3EE300BD0210 /* ActionQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionQueue.swift; sourceTree = "<group>"; };
+		F83CFE9B27FD6B5900BD0210 /* ArrayExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayExtension.swift; sourceTree = "<group>"; };
+		F83CFE9D280034C400BD0210 /* UIlabelExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIlabelExtension.swift; sourceTree = "<group>"; };
+		F83CFE9F2800385200BD0210 /* AttributedListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedListController.swift; sourceTree = "<group>"; };
+		F83CFEA128003E7D00BD0210 /* FontController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontController.swift; sourceTree = "<group>"; };
+		F86425F727F19E10002AD9E1 /* AttributedController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedController.swift; sourceTree = "<group>"; };
 		F864260427F1AA47002AD9E1 /* Attributed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attributed.swift; sourceTree = "<group>"; };
 		F864260527F1AA47002AD9E1 /* AttributedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributedString.swift; sourceTree = "<group>"; };
 		F864260827F53FC7002AD9E1 /* Attachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attachment.swift; sourceTree = "<group>"; };
@@ -181,6 +193,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		F83CFE9827FD3EBF00BD0210 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				F83CFE9927FD3EE300BD0210 /* ActionQueue.swift */,
+				F83CFE9B27FD6B5900BD0210 /* ArrayExtension.swift */,
+			);
+			path = Util;
+			sourceTree = "<group>";
+		};
 		F86425F427F18EDE002AD9E1 /* Attributed */ = {
 			isa = PBXGroup;
 			children = (
@@ -189,8 +210,10 @@
 				F864260827F53FC7002AD9E1 /* Attachment.swift */,
 				F864261A27F7FCB5002AD9E1 /* ParagraphStyle.swift */,
 				F864261727F6DEE7002AD9E1 /* Action.swift */,
+				F83CFE9627FD2F4000BD0210 /* Checking.swift */,
 				F864260F27F6AC9A002AD9E1 /* UIKit */,
 				F864260A27F555D5002AD9E1 /* Extension */,
+				F83CFE9827FD3EBF00BD0210 /* Util */,
 			);
 			path = Attributed;
 			sourceTree = "<group>";
@@ -198,7 +221,9 @@
 		F86425F627F19DF3002AD9E1 /* All */ = {
 			isa = PBXGroup;
 			children = (
-				F86425F727F19E10002AD9E1 /* FontController.swift */,
+				F83CFE9F2800385200BD0210 /* AttributedListController.swift */,
+				F86425F727F19E10002AD9E1 /* AttributedController.swift */,
+				F83CFEA128003E7D00BD0210 /* FontController.swift */,
 			);
 			name = All;
 			sourceTree = "<group>";
@@ -215,6 +240,7 @@
 		F864260F27F6AC9A002AD9E1 /* UIKit */ = {
 			isa = PBXGroup;
 			children = (
+				F83CFE9D280034C400BD0210 /* UIlabelExtension.swift */,
 				F864261027F6ACC4002AD9E1 /* TextViewExtension.swift */,
 				F864261527F6D9FD002AD9E1 /* ObjectExtension.swift */,
 			);
@@ -414,16 +440,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F83CFE9C27FD6B5900BD0210 /* ArrayExtension.swift in Sources */,
 				F864261627F6D9FD002AD9E1 /* ObjectExtension.swift in Sources */,
 				F864261827F6DEE7002AD9E1 /* Action.swift in Sources */,
 				F864260627F1AA47002AD9E1 /* Attributed.swift in Sources */,
 				F864260727F1AA47002AD9E1 /* AttributedString.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
+				F83CFE9A27FD3EE300BD0210 /* ActionQueue.swift in Sources */,
 				F864260C27F55605002AD9E1 /* CGRectExtension.swift in Sources */,
-				F86425F827F19E10002AD9E1 /* FontController.swift in Sources */,
+				F86425F827F19E10002AD9E1 /* AttributedController.swift in Sources */,
+				F83CFEA02800385200BD0210 /* AttributedListController.swift in Sources */,
+				F83CFEA228003E7D00BD0210 /* FontController.swift in Sources */,
 				F864260927F53FC7002AD9E1 /* Attachment.swift in Sources */,
 				F864261127F6ACC4002AD9E1 /* TextViewExtension.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				F83CFE9E280034C400BD0210 /* UIlabelExtension.swift in Sources */,
+				F83CFE9727FD2F4000BD0210 /* Checking.swift in Sources */,
 				F864261B27F7FCB6002AD9E1 /* ParagraphStyle.swift in Sources */,
 				F864260E27F6AC5F002AD9E1 /* Extension.swift in Sources */,
 			);

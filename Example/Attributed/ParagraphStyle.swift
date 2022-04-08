@@ -9,7 +9,7 @@
 
 import UIKit
 
-extension AttributeStringItem.Attribute {
+extension AttributedStringItem.Attribute {
     /// 段落
     /// - Parameter value: 段落样式
     /// - Returns: 属性
@@ -25,7 +25,7 @@ extension AttributeStringItem.Attribute {
     }
 }
 
-extension AttributeStringItem.Attribute {
+extension AttributedStringItem.Attribute {
     
     public struct ParagraphStyle {
         
@@ -81,7 +81,7 @@ extension AttributeStringItem.Attribute {
     }
 }
 
-extension AttributeStringItem.Attribute.ParagraphStyle {
+extension AttributedStringItem.Attribute.ParagraphStyle {
     
     
     /// 行间距

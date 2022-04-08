@@ -1,13 +1,13 @@
 import UIKit
 
-extension AttributeStringItem {
+extension AttributedString {
     public struct Attribute {
         let attributes: [NSAttributedString.Key: Any]
     }
     
 }
 
-extension AttributeStringItem.Attribute {
+extension AttributedString.Attribute {
     
     /// 字号
     public static func font(_ value: UIFont) -> Self {
@@ -137,7 +137,7 @@ extension AttributeStringItem.Attribute {
     
 }
 
-extension AttributeStringItem.Attribute {
+extension AttributedString.Attribute {
     
     public enum WritingDirection {
         case LRE
@@ -160,7 +160,7 @@ extension AttributeStringItem.Attribute {
 }
 
 
-public extension Array where Element == AttributeStringItem.Attribute {
+public extension Array where Element == AttributedString.Attribute {
     var attributesDictionary: [NSAttributedString.Key: Any] {
         var attributesDict: [NSAttributedString.Key: Any] = [:]
         self.forEach { attribute in
@@ -175,7 +175,7 @@ public extension Array where Element == AttributeStringItem.Attribute {
 }
 
 public extension NSAttributedString {
-    convenience init(string str: String, stringAttributes attrs: [AttributeStringItem.Attribute]) {
+    convenience init(string str: String, stringAttributes attrs: [AttributedString.Attribute]) {
         self.init(string: str, attributes: attrs.attributesDictionary)
     }
 }

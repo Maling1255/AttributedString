@@ -8,7 +8,7 @@
 
 import UIKit
 
-extension AttributeStringItem {
+extension AttributedStringItem {
     
     public enum Attachment {
 //        case image(UIImage, bounds: CGRect)
@@ -136,7 +136,7 @@ extension AttributeStringItem {
 }
 
 
-extension AttributeStringItem.Attachment {
+extension AttributedStringItem.Attachment {
     
     /// 对齐
     public enum Alignment {
@@ -180,7 +180,7 @@ extension AttributeStringItem.Attachment {
     
 }
 
-fileprivate extension AttributeStringItem.Attachment.Alignment {
+fileprivate extension AttributedStringItem.Attachment.Alignment {
     
     /// 计算坐标
     /// - Parameters:
