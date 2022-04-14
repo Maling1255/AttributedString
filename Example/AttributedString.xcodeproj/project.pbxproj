@@ -21,6 +21,12 @@
 		F83CFE9E280034C400BD0210 /* UIlabelExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83CFE9D280034C400BD0210 /* UIlabelExtension.swift */; };
 		F83CFEA02800385200BD0210 /* AttributedListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83CFE9F2800385200BD0210 /* AttributedListController.swift */; };
 		F83CFEA228003E7D00BD0210 /* FontController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F83CFEA128003E7D00BD0210 /* FontController.swift */; };
+		F86022FB28067DDF00EFEE9A /* ParagraphStyleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86022FA28067DDF00EFEE9A /* ParagraphStyleController.swift */; };
+		F86022FD28067E8700EFEE9A /* ForegroundController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86022FC28067E8700EFEE9A /* ForegroundController.swift */; };
+		F86022FF2806AB2B00EFEE9A /* BackgroundController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86022FE2806AB2B00EFEE9A /* BackgroundController.swift */; };
+		F86023012806ABD200EFEE9A /* LigatureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86023002806ABD200EFEE9A /* LigatureController.swift */; };
+		F86023032806AC6E00EFEE9A /* UnderlineController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86023022806AC6E00EFEE9A /* UnderlineController.swift */; };
+		F860230528081B3800EFEE9A /* TestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F860230428081B3800EFEE9A /* TestController.swift */; };
 		F86425F827F19E10002AD9E1 /* AttributedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86425F727F19E10002AD9E1 /* AttributedController.swift */; };
 		F864260627F1AA47002AD9E1 /* Attributed.swift in Sources */ = {isa = PBXBuildFile; fileRef = F864260427F1AA47002AD9E1 /* Attributed.swift */; };
 		F864260727F1AA47002AD9E1 /* AttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = F864260527F1AA47002AD9E1 /* AttributedString.swift */; };
@@ -69,6 +75,12 @@
 		F83CFE9D280034C400BD0210 /* UIlabelExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIlabelExtension.swift; sourceTree = "<group>"; };
 		F83CFE9F2800385200BD0210 /* AttributedListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedListController.swift; sourceTree = "<group>"; };
 		F83CFEA128003E7D00BD0210 /* FontController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontController.swift; sourceTree = "<group>"; };
+		F86022FA28067DDF00EFEE9A /* ParagraphStyleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParagraphStyleController.swift; sourceTree = "<group>"; };
+		F86022FC28067E8700EFEE9A /* ForegroundController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundController.swift; sourceTree = "<group>"; };
+		F86022FE2806AB2B00EFEE9A /* BackgroundController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundController.swift; sourceTree = "<group>"; };
+		F86023002806ABD200EFEE9A /* LigatureController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LigatureController.swift; sourceTree = "<group>"; };
+		F86023022806AC6E00EFEE9A /* UnderlineController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnderlineController.swift; sourceTree = "<group>"; };
+		F860230428081B3800EFEE9A /* TestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestController.swift; sourceTree = "<group>"; };
 		F86425F727F19E10002AD9E1 /* AttributedController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedController.swift; sourceTree = "<group>"; };
 		F864260427F1AA47002AD9E1 /* Attributed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attributed.swift; sourceTree = "<group>"; };
 		F864260527F1AA47002AD9E1 /* AttributedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributedString.swift; sourceTree = "<group>"; };
@@ -126,6 +138,7 @@
 		607FACD21AFB9204008FA782 /* Example for AttributedString */ = {
 			isa = PBXGroup;
 			children = (
+				F860230428081B3800EFEE9A /* TestController.swift */,
 				F86425F627F19DF3002AD9E1 /* All */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
@@ -202,6 +215,19 @@
 			path = Util;
 			sourceTree = "<group>";
 		};
+		F86022F928067D8D00EFEE9A /* AttributedController */ = {
+			isa = PBXGroup;
+			children = (
+				F83CFEA128003E7D00BD0210 /* FontController.swift */,
+				F86022FA28067DDF00EFEE9A /* ParagraphStyleController.swift */,
+				F86022FC28067E8700EFEE9A /* ForegroundController.swift */,
+				F86022FE2806AB2B00EFEE9A /* BackgroundController.swift */,
+				F86023002806ABD200EFEE9A /* LigatureController.swift */,
+				F86023022806AC6E00EFEE9A /* UnderlineController.swift */,
+			);
+			name = AttributedController;
+			sourceTree = "<group>";
+		};
 		F86425F427F18EDE002AD9E1 /* Attributed */ = {
 			isa = PBXGroup;
 			children = (
@@ -223,7 +249,7 @@
 			children = (
 				F83CFE9F2800385200BD0210 /* AttributedListController.swift */,
 				F86425F727F19E10002AD9E1 /* AttributedController.swift */,
-				F83CFEA128003E7D00BD0210 /* FontController.swift */,
+				F86022F928067D8D00EFEE9A /* AttributedController */,
 			);
 			name = All;
 			sourceTree = "<group>";
@@ -440,8 +466,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F86022FD28067E8700EFEE9A /* ForegroundController.swift in Sources */,
+				F86023032806AC6E00EFEE9A /* UnderlineController.swift in Sources */,
 				F83CFE9C27FD6B5900BD0210 /* ArrayExtension.swift in Sources */,
+				F860230528081B3800EFEE9A /* TestController.swift in Sources */,
 				F864261627F6D9FD002AD9E1 /* ObjectExtension.swift in Sources */,
+				F86022FF2806AB2B00EFEE9A /* BackgroundController.swift in Sources */,
 				F864261827F6DEE7002AD9E1 /* Action.swift in Sources */,
 				F864260627F1AA47002AD9E1 /* Attributed.swift in Sources */,
 				F864260727F1AA47002AD9E1 /* AttributedString.swift in Sources */,
@@ -450,6 +480,8 @@
 				F864260C27F55605002AD9E1 /* CGRectExtension.swift in Sources */,
 				F86425F827F19E10002AD9E1 /* AttributedController.swift in Sources */,
 				F83CFEA02800385200BD0210 /* AttributedListController.swift in Sources */,
+				F86023012806ABD200EFEE9A /* LigatureController.swift in Sources */,
+				F86022FB28067DDF00EFEE9A /* ParagraphStyleController.swift in Sources */,
 				F83CFEA228003E7D00BD0210 /* FontController.swift in Sources */,
 				F864260927F53FC7002AD9E1 /* Attachment.swift in Sources */,
 				F864261127F6ACC4002AD9E1 /* TextViewExtension.swift in Sources */,

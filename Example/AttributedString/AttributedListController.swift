@@ -8,50 +8,87 @@
 
 import UIKit
 
+struct Model {
+    let title: String
+    let explain: String
+}
+
 class AttributedListController: UITableViewController {
 
     
-    var modes: [String] = []
+    var modes: [Model] = []
     override func viewDidLoad() {
         super.viewDidLoad()
-        modes = ["Font", "ParagraphStyle", "ForegroundColor"]
+        modes = [
+            Model(title: "Font", explain: "字体"),
+            Model(title: "ParagraphStyle", explain: "段落样式"),
+            Model(title: "Foreground", explain: "前景色"),
+            Model(title: "Background", explain: "背景色"),
+            Model(title: "Ligature", explain: "连体字"),
+            Model(title: "Underline", explain: "下划线"),
+            
+            
+            Model(title: "Test", explain: "🔥测试控制器"),
+        ]
         
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return modes.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCell(withIdentifier: "list_cell_id")
         if cell == nil {
-            cell = UITableViewCell.init(style: .default, reuseIdentifier: "list_cell_id")
+            cell = UITableViewCell.init(style: .value1, reuseIdentifier: "list_cell_id")
         }
+        
+        cell?.accessoryType = .disclosureIndicator
+        
+        let modes = modes[indexPath.row]
+        
         if #available(iOS 14.0, *) {
             var content = cell?.defaultContentConfiguration()
-            content?.text = "\(indexPath.row)"
+            content?.text = modes.title
+            content?.secondaryText = modes.explain
             cell?.contentConfiguration = content
         } else {
-            cell?.textLabel?.text = "\(indexPath.row)"
+            cell?.textLabel?.text = modes.title
+            cell?.detailTextLabel?.text = modes.explain
         }
         return cell!
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        var string = modes[indexPath.row]
+        let modes = modes[indexPath.row]
+        
+        if (modes.title == "Test") {
+            self.navigationController?.pushViewController(TestController(), animated: true)
+            return
+        }
+        
+        var string = modes.title
         string.append("Controller")
-//        FontController
-        
 
-        let a: AnyClass! =  swiftClassFromString(className: string)
+        let anyClass: AnyClass! =  swiftClassFromString(className: string)
+        let subClass = anyClass as! UIViewController.Type
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let baseVC: AttributedController = storyboard.instantiateViewController(withIdentifier: "AttributedController_id") as! AttributedController
+        
+        baseVC.title = " \(modes.title) "
         
         
-        let b = a as! UIViewController.Type
-        self.navigationController?.pushViewController(b.init(), animated: true)
+        
+        
+        // 当前指针指向子类
+        object_setClass(baseVC, subClass)
+        self.navigationController?.pushViewController(baseVC, animated: true)
     }
 
     
+    // 加载转换的类 需要添加工程路径
     func swiftClassFromString(className: String) -> AnyClass! {
         // get the project name
         if  let appName: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as! String? {

@@ -96,7 +96,7 @@ extension AttributedString.Attribute {
         return .init(attributes: [.textEffect: value])
     }
     
-    /// 下划线
+    /// 链接
     public static func link(_ value: String) -> Self {
         guard let url = URL(string: value) else {
             return .init(attributes: [:])

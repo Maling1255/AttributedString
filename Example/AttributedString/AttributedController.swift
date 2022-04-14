@@ -10,118 +10,43 @@ import Foundation
 import UIKit
 //import AttributedString
 
-struct Sports: OptionSet {
-    let rawValue: Int
-    static let running = Sports(rawValue: 1)
-    static let cycling = Sports(rawValue: 2)
-    static let swimming = Sports(rawValue: 4)
-    static let fencing = Sports(rawValue: 8)
-    static let shooting = Sports(rawValue: 32)
-    static let horseJumping = Sports(rawValue: 512)
-}
-
 
 class AttributedController: UIViewController {
     
     @IBOutlet weak var Label: UILabel!
     @IBOutlet weak var textView: UITextView!
     
+    @IBOutlet weak var textViewHeight: NSLayoutConstraint!
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        let size = textView.sizeThatFits(CGSize(view.bounds.size.width, 1500))
+        textViewHeight.constant = size.height
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
         view.backgroundColor = .white
         
+        
+        
+        
 //        let att = NSMutableAttributedString()
-//        var fontAtt = AttributedString(
-//            .string("字号10的大小\n", [.font(.size(10, .regular))]),
-//            .string("字号13的大小\n", [.font(.size(13, .regular))]),
-//            .string("字号16的大小\n", [.font(.size(16, .regular))]),
-//            .string("字号19的大小\n", [.font(.size(19, .regular))]),
-//            .string("字号21的大小\n", [.font(.size(21, .regular))]),
-//            .string("字号24的大小\n", [.font(.size(24, .regular))]),
-//            .string("字号30的大小\n", .font(.size(30, .regular))),
-//            .string("字号24的大小\n", .font(.size(24, .bold))),
-//            .string("字号21的大小\n", .font(.size(21, .bold))),
-//            .string("字号19的大小\n", .font(.size(19, .bold))),
-//            .string("字号16的大小\n", .font(.size(16, .bold))),
-//            .string("字号13的大小\n", .font(.size(13, .bold))),
-//            .string("字号10的大小\n", .font(.size(10, .bold)))
-//        )
 
-//        let foregroundColorAtt = AttributedString(
-//            .string("black Color\n", .foreground(.black)),
-//            .string("darkGray Color\n", .foreground(.darkGray)),
-//            .string("lightGray Color\n", .foreground(.lightGray)),
-//            .string("white Color\n", .foreground(.white)),
-//            .string("gray Color\n", .foreground(.gray)),
-//            .string("red Color\n", .foreground(.red)),
-//            .string("green Color\n", .foreground(.green)),
-//            .string("blue Color\n", .foreground(.blue)),
-//            .string("cyan Color\n", .foreground(.cyan)),
-//            .string("blue Color\n", .foreground(.blue)),
-//            .string("yellow Color\n", .foreground(.yellow)),
-//            .string("magenta Color\n", .foreground(.magenta)),
-//            .string("orange Color\n", .foreground(.orange)),
-//            .string("purple Color\n", .foreground(.purple)),
-//            .string("brown Color\n", .foreground(.brown)),
-//            .string("clear Color\n", .foreground(.clear))
-//        )
+
+
 //        fontAtt.append(foregroundColorAtt)
 //
-//        let backgroundColorAtt = AttributedString(
-//            .string("black Color\n", .background(.black)),
-//            .string("darkGray Color\n", .background(.darkGray)),
-//            .string("lightGray Color\n", .background(.lightGray)),
-//            .string("white Color\n", .background(.white)),
-//            .string("gray Color\n", .background(.gray)),
-//            .string("red Color\n", .background(.red)),
-//            .string("green Color\n", .background(.green)),
-//            .string("blue Color\n", .background(.blue)),
-//            .string("cyan Color\n", .background(.cyan)),
-//            .string("blue Color\n", .background(.blue)),
-//            .string("yellow Color\n", .background(.yellow)),
-//            .string("magenta Color\n", .background(.magenta)),
-//            .string("orange Color\n", .background(.orange)),
-//            .string("purple Color\n", .background(.purple)),
-//            .string("brown Color\n", .background(.brown)),
-//            .string("clear Color\n", .background(.clear))
-//        )
+
 //        fontAtt.append(backgroundColorAtt)
 //
-//        let underlineAtt = AttributedString(
-//            .string("single\n", .font(.size(18))),
-//            .string("thick\n", [.font(.size(18)), .underlineStyle(.thick)]),
-//            .string("styleDouble\n", [.font(.size(18)), .underlineStyle(.double)]),
-//
-//            .string("patternDot\n", [.font(.size(18)), .underlineStyle([.patternDot, .thick])]),
-//            .string("patternDash\n", [.font(.size(18)), .underlineStyle([.patternDash, .thick])]),
-//            .string("patternDashDot\n", [.font(.size(18)), .underlineStyle([.patternDashDot, .thick])]),
-//            .string("patternDashDotDot\n", [.font(.size(18)), .underlineStyle([.patternDashDotDot, .thick])]),
-//
-//            .string("byWord\n", [.font(.size(18)), .underlineStyle(.byWord)]),
-//
-//            .string("rawValue: 1\n", .font(.size(18)), .underlineStyle(.init(rawValue: 1))),
-//            .string("rawValue: 2\n", .font(.size(18)), .underlineStyle(.init(rawValue: 2))),
-//            .string("rawValue: 3\n", .font(.size(18)), .underlineStyle(.init(rawValue: 3))),
-//            .string("rawValue: 4\n", .font(.size(18)), .underlineStyle(.init(rawValue: 4))),
-//            .string("rawValue: 5\n", .font(.size(18)), .underlineStyle(.init(rawValue: 5))),
-//            .string("rawValue: 6\n", .font(.size(18)), .underlineStyle(.init(rawValue: 6))),
-//            .string("rawValue: 7\n", .font(.size(18)), .underlineStyle(.init(rawValue: 7))),
-//            .string("rawValue: 1\n", .font(.size(18)), .underline(.init(rawValue: 1))),
-//            .string("rawValue: 8\n", .font(.size(18)), .underline(.single, color: .red)),
-//            .string("rawValue: 9\n", .font(.size(18)), .underline(.thick, color: .blue)),
-//            .string("rawValue: 10\n", .font(.size(18)), .underline(.double, color: .cyan)),
-//            .string("rawValue: 11\n", .font(.size(18)), .underlineColor(.red), .underlineStyle(.init(rawValue: 11))),
-//            .string("rawValue: 12\n", .font(.size(18)), .underlineColor(.blue), .underlineStyle(.init(rawValue: 12))),
-//            .string("rawValue: 13\n", .font(.size(18)), .underlineColor(.cyan), .underlineStyle(.init(rawValue: 13)))
-//        )
+
 //        fontAtt.append(underlineAtt)
 //
-//        let ligatureAtt = AttributedString(
-//            .string("fltytfhijkflmnopqrstyz\n", [.ligature(true), .font(.name("futura", size: 21)!)]),
-//            .string("fltytfhijkflmnopqrstyz\n", [.ligature(false), .font(.name("futura", size: 21)!)])
-//        )
-//        fontAtt.append(ligatureAtt)
+
 //
 //
 //        let kernAtt = AttributedString(
@@ -292,23 +217,7 @@ class AttributedController: UIViewController {
 //        fontAtt.append(verticalGlyphForm)
 //
 //
-//        let paragraph = AttributedString(
-//            .string(
-//                """
-//         这是一段很长的文字,用来测试段落的,包括行间距,首行缩进等这是一段很长的文字,用来测试段落的,包括行间距,首行缩进等这是一段很长的文字,用来测试段落的,包括行间距,首行缩进等这是一段很长的文字,用来测试
-//
-//      🔥段落的,包括行间距,首行缩进等这是一段很长的文字,用来测试段落的,包括行间距,首行缩进等这是一段很长的文字,用来测试段落的,包括行间距,首行缩进等这是一段很长的文字,用来测试段落的,包括行间距,首行缩进等这是一段很长的文字,用来测试段落的,包括行间距,首行缩进等这是一段很长的文字,用来测试段落的,包括行间距,首行缩进等\n
-//"""
-//                , [.font(.size(17)), .foreground(.brown), .paragraph(.lineSpacing(10), .headIndent(20), .firstLineHeadIndent(50))]),
-//
-//                .string(
-//                    """
-//          段落的,包括行间距,首行缩进等这是一段很长的文字,用来测试段落的,包括行间距,首行缩进等这是一段很长的文字,用来测试段落的,包括行间距,首行缩进等这是一段很长的文字,用来测试段落的,包括行间距,首行缩进等这是一段很长的文字,用来测试段落的,包括行间距,首行缩进等这是一段很长的文字,用来测试段落的,包括行间距,首行缩进等段落的,包括行间距,首行缩进等这是一段很长的文字,用来测试段落的,包括行间距,首行缩进等这是一段很长的文字,用来测试段落的,包括行间距,首行缩进等这是一段很长的文字,用来测试段落的,包括行间距,首行缩进等这是一段很长的文字,用来测试段落的,包括行间距,首行缩进等这是一段很长的文字,用来测试段落的,包括行间距,首行缩进等段落的,包括行间距,首行缩进等这是一段很长的文字,用来测试段落的,包括行间距,首行缩进等这是一段很长的文字,用来测试段落的,包括行间距,首行缩进等这是一段很长的文字,用来测试段落的,包括行间距,首行缩进等这是一段很长的文字,用来测试段落的,包括行间距,首行缩进等这是一段很长的文字,用来测试段落的,包括行间距,首行缩进等\n
-//    """
-//                    , [.font(.size(17)), .foreground(.brown), .paragraph([.firstLineHeadIndent(20), .paragraphSpacingBefore(80), .alignment(.right)])])
-//        )
-//
-//        fontAtt.append(paragraph)
+
         
 //        func clicked(_ result: AttributedString.Action.Result) {
 //            switch result.content {

@@ -25,6 +25,57 @@ extension AttributedStringItem.Attribute {
     }
 }
 
+extension AttributedStringItem.Attribute.ParagraphStyle {
+    
+    public func setParagraphStyle(_ paragraphStyle: NSParagraphStyle) -> NSParagraphStyle {
+        
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.setParagraphStyle(paragraphStyle)
+        
+        func fetch<Value>(_ key: Key, completion: (Value)->()) {
+             guard let value = style[key] as? Value else { return }
+             completion(value)
+         }
+        
+        let key = style.keys.first! as Key
+        switch key {
+        case .lineSpacing:
+            fetch(key) { paragraph.lineSpacing = $0 }
+        case .paragraphSpacing:
+            fetch(key) { paragraph.paragraphSpacing = $0 }
+        case .alignment:
+            fetch(key) { paragraph.alignment = $0 }
+        case .firstLineHeadIndent:
+            fetch(key) { paragraph.firstLineHeadIndent = $0 }
+        case .headIndent:
+            fetch(key) { paragraph.headIndent = $0 }
+        case .tailIndent:
+            fetch(key) { paragraph.tailIndent = $0 }
+        case .lineBreakMode:
+            fetch(key) { paragraph.lineBreakMode = $0 }
+        case .minimumLineHeight:
+            fetch(key) { paragraph.minimumLineHeight = $0 }
+        case .maximumLineHeight:
+            fetch(key) { paragraph.maximumLineHeight = $0 }
+        case .baseWritingDirection:
+            fetch(key) { paragraph.baseWritingDirection = $0 }
+        case .lineHeightMultiple:
+            fetch(key) { paragraph.lineHeightMultiple = $0 }
+        case .paragraphSpacingBefore:
+            fetch(key) { paragraph.paragraphSpacingBefore = $0 }
+        case .hyphenationFactor:
+            fetch(key) { paragraph.hyphenationFactor = $0 }
+        case .tabStops:
+            fetch(key) { paragraph.tabStops = $0 }
+        case .defaultTabInterval:
+            fetch(key) { paragraph.defaultTabInterval = $0 }
+        case .allowsDefaultTighteningForTruncation:
+            fetch(key) { paragraph.allowsDefaultTighteningForTruncation = $0 }
+        }
+        return paragraph
+    }
+}
+
 extension AttributedStringItem.Attribute {
     
     public struct ParagraphStyle {
@@ -50,14 +101,16 @@ extension AttributedStringItem.Attribute {
         
         fileprivate let style: [Key: Any]
         
+ 
+        
         fileprivate static func get(_ attributes: [ParagraphStyle]) -> NSParagraphStyle {
             var temp: [Key: Any] = [:]
             attributes.forEach { temp.merge($0.style, uniquingKeysWith: { $1 }) }
             
             func fetch<Value>(_ key: Key, completion: (Value)->()) {
-                guard let value = temp[key] as? Value else { return }
-                completion(value)
-            }
+                 guard let value = temp[key] as? Value else { return }
+                 completion(value)
+             }
             
             let paragraph = NSMutableParagraphStyle()
             fetch(.lineSpacing) { paragraph.lineSpacing = $0 }
@@ -160,7 +213,7 @@ extension AttributedStringItem.Attribute.ParagraphStyle {
         return .init(style: [.defaultTabInterval: value])
     }
     
-    // 指示系统在截断文本之前是否拧紧字符间距
+    /// 指示系统在截断文本之前是否拧紧字符间距
     public static func allowsDefaultTighteningForTruncation(_ value: Bool) -> Self {
         return .init(style: [.allowsDefaultTighteningForTruncation: value])
     }

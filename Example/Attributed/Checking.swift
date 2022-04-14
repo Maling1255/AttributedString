@@ -90,7 +90,7 @@ extension AttributedString.Checking {
         
         internal var handle: (() -> Void)?
         
-        public init (_ trigger: Trigger = .click, highlights: [Highlight] = .defaultValue, with callback: @escaping (Result) -> Void) {
+        public init (_ trigger: Trigger = .click, highlights: [Highlight] = .default, with callback: @escaping (Result) -> Void) {
             self.trigger = trigger
             self.highlights = highlights
             self.callback = callback

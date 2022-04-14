@@ -10,11 +10,17 @@ import UIKit
 
 class FontController: AttributedController {
 
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         
-        let fontAtt = AttributedString(
+        let font = AttributedString(
             .string("字号10的大小\n", [.font(.size(10, .regular))]),
             .string("字号13的大小\n", [.font(.size(13, .regular))]),
             .string("字号16的大小\n", [.font(.size(16, .regular))]),
@@ -29,9 +35,13 @@ class FontController: AttributedController {
             .string("字号13的大小\n", .font(.size(13, .bold))),
             .string("字号10的大小\n", .font(.size(10, .bold)))
         )
+
+        textView.attributed.string = font
         
-        textView.attributed.string = fontAtt
+        Label.attributed.string = font
     }
+ 
+
     
     /*
     // MARK: - Navigation

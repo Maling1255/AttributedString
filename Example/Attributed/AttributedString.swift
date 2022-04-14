@@ -49,6 +49,14 @@ public struct AttributedStringItem {
         .init(string: sting, attributes: attributes, image: UIImage(), view: UIView(), style: .original(), form:.string)
     }
     
+    // attributes
+    public static func attributes(_ attributes: Attribute...) -> AttributedStringItem {
+        .attributes(attributes)
+    }
+    public static func attributes(_ attributes: [Attribute]) -> AttributedStringItem {
+        .string("", attributes)
+    }
+    
     // image
     public static func image(_ image: UIImage, _ style: Style = .original(), newline: Newline = .not) -> AttributedStringItem {
         return .init(string: "", attributes: [], image: image, view: UIView(), style: style, form: .image(newline))
@@ -75,19 +83,64 @@ public struct AttributedString {
         value.length
     }
     
+    /// String
+    
+    public init(string value: String, _ attributes: Attribute...) {
+        self.value = AttributedString(string: value, attributes).value
+    }
+    
+    public init(string value: String, _ attributes: [Attribute] = []) {
+        self.value = AttributedString(.init(string: value), attributes).value
+    }
+    
+    // attributedString
     internal init(_ value: NSAttributedString) {
         self.value = value
     }
     
-    public init(_ attributes: AttributedStringItem...) {
-        self.value = AttributedString.init(attributes).value
-        self.value.attributes = attributes
+    public init(_ value: NSAttributedString, _ attributes: Attribute...) {
+        self.value = AttributedString.init(value, attributes).value
     }
     
-    public init(_ attributes: [AttributedStringItem]) {
+    public init?(_ value: NSAttributedString?, _ attributes: Attribute...) {
+        guard let value = value else { return nil }
+        self.value = AttributedString(value, attributes).value
+    }
+    
+    public init?(_ value: NSAttributedString?, _ attributes: [Attribute]) {
+        guard let value = value else { return nil }
+        self.value = AttributedString(value, attributes).value
+    }
+    
+    public init(_ value: NSAttributedString, _ attributes: [Attribute]) {
+        
+        let mutableAttributedString = NSMutableAttributedString(attributedString: value)
+        
+        // 合并action成数组之后的 attributes
+        let mergedAttributes =  attributes.mergedAction()
+        // 获取通用属性
+        var validAttribute: [NSAttributedString.Key : Any] = [:]
+        // 取最后添加相同的key的acttributes, 如.font(12), .font(30), 取.font(30)作为字体大小
+        mergedAttributes.forEach { attribute in
+            validAttribute.merge(attribute.attributes, uniquingKeysWith: { $1 })
+        }
+        
+        mutableAttributedString.addAttributes(validAttribute, range: .init(location: 0, length: mutableAttributedString.length))
+        self.value = mutableAttributedString
+//        self.value.attributes = attributedStringItems
+    }
+    
+    
+    // attributedStringItems
+    public init(_ attributedStringItems: AttributedStringItem...) {
+        self.value = AttributedString.init(attributedStringItems).value
+        self.value.attributes = attributedStringItems
+    }
+    
+    public init(_ attributedStringItems: [AttributedStringItem]) {
         
         let mutableAttributedString = NSMutableAttributedString(string: "")
-        attributes.forEach { (attribute: AttributedStringItem) in
+        attributedStringItems.forEach { (attribute: AttributedStringItem) in
             
             // 合并action成数组之后的 attributes
             let mergedAttributes =  attribute.attributes.mergedAction()
@@ -100,8 +153,6 @@ public struct AttributedString {
             
             switch attribute.form {
             case .string:
-                
-//                mutableAttributedString.append(.init(string: attribute.string, attributes: attribute.attributes.attributesDictionary))
                 
                 mutableAttributedString.append(.init(string: attribute.string, attributes: validAttribute))
                 
@@ -136,8 +187,13 @@ public struct AttributedString {
         }
         
         self.value = mutableAttributedString
-        self.value.attributes = attributes
+        self.value.attributes = attributedStringItems
     }
+    
+    
+    
+    
+    
     
     public mutating func font(_ font: UIFont) -> Self {
         let att = NSMutableAttributedString(attributedString: self.value)

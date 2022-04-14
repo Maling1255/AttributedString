@@ -20,7 +20,7 @@ extension AttributedString {
         
         internal var handle: (() -> Void)?
         
-        public init(_ trigger: Trigger = .click, highlights: [Highlight] = .defaultValue, with callback: @escaping (Result) -> Void) {
+        public init(_ trigger: Trigger = .click, highlights: [Highlight] = .default, with callback: @escaping (Result) -> Void) {
             self.trigger = trigger
             self.highlights = highlights
             self.callback = callback
@@ -168,7 +168,7 @@ extension AttributedStringWrapper {
 
 public extension Array where Element == AttributedString.Action.Highlight {
     
-    static var defaultValue: [AttributedString.Action.Highlight] = [.foreground(#colorLiteral(red: 0.01680417731, green: 0.1983509958, blue: 1, alpha: 1)), .underline(.single)]
+    static var `default`: [AttributedString.Action.Highlight] = [.foreground(#colorLiteral(red: 0.01680417731, green: 0.1983509958, blue: 1, alpha: 1)), .underline(.single)]
     
     static let empty: [AttributedString.Action.Highlight] = []
 }
