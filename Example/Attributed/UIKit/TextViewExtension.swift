@@ -146,7 +146,7 @@ extension AttributedStringWrapper where Base: UITextView {
         // 清理原有监听
         observations = [:]
         
-        // 刷新的时候 清理原有视图, 后面再添加新的
+        // 刷新的时候清理已经添加的自定义视图, 为了后面重新添加
         for view in base.subviews where view is AttachmentView {
             view.removeFromSuperview()
         }
@@ -154,7 +154,6 @@ extension AttributedStringWrapper where Base: UITextView {
 
         // 获取自定义视图附件
         let attachments: [NSRange: AttributedStringItem.ViewAttachment] = string.value.get(.attachment)
-
         guard !attachments.isEmpty else {
             return
         }
@@ -334,75 +333,6 @@ fileprivate extension UITextView {
             // 更新全部自定义视图位置
             attachmentViews.forEach(update)
         }
-    }
-}
-
-
-/// 附件视图
-private class AttachmentView: UIView {
-    
-    typealias Style = AttributedStringItem.Attachment.Style
-    
-    let view: UIView
-    let style: Style
-    
-    private var observation: [String: NSKeyValueObservation] = [:]
-    
-    init(_ view: UIView, with style: Style) {
-        self.view = view
-        self.style = style
-        super.init(frame: view.bounds)
-        
-        clipsToBounds = true
-        backgroundColor = .clear
-        
-        addSubview(view)
-        
-        // 监听子视图位置变化 固定位置
-        observation["frame"] = view.observe(\.frame) { [weak self] (object, changed) in
-            guard let self = self else { return }
-            self.update()
-        }
-        observation["bounds"] = view.observe(\.bounds) { [weak self] (object, changed) in
-            guard let self = self else { return }
-            self.update()
-        }
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        update()
-    }
-    
-    private func update() {
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)
-        view.center = .init(bounds.width * 0.5, bounds.height * 0.5)
-        switch style.mode {
-        case .proposed:
-            view.transform = .init(
-                scaleX: bounds.width / view.bounds.width,
-                y: bounds.height / view.bounds.height
-            )
-            
-        case .original:
-            let ratio = view.bounds.width / view.bounds.height
-            view.transform = .init(
-                scaleX: bounds.width / view.bounds.width,
-                y: bounds.width / ratio / view.bounds.height
-            )
-            
-        case .custom(let size):
-            view.transform = .init(
-                scaleX: size.width / view.bounds.width,
-                y: size.height / view.bounds.height
-            )
-        }
-        CATransaction.commit()
     }
 }
 

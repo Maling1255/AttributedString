@@ -39,15 +39,20 @@ class UnderlineController: AttributedController {
             .string("rawValue: 11\n", .font(.size(18)), .underlineColor(.red), .underlineStyle(.init(rawValue: 11))),
             .string("rawValue: 12\n", .font(.size(18)), .underlineColor(.blue), .underlineStyle(.init(rawValue: 12))),
             .string("rawValue: 13\n", .font(.size(18)), .underlineColor(.cyan), .underlineStyle(.init(rawValue: 13)))
+            
         )
         
         textView.attributed.string = underline
-        Label.attributed.string = underline
         
+        
+        Label.attributed.string = underline
+        Label.attributed.lineSpacing(10).backgroundColor(.brown)
       
+        
+
+        
     }
     
-
     /*
     // MARK: - Navigation
 

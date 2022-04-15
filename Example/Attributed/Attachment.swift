@@ -204,3 +204,72 @@ fileprivate extension AttributedStringItem.Attachment.Alignment {
         }
     }
 }
+
+
+/// 附件视图
+public class AttachmentView: UIView {
+    
+    typealias Style = AttributedStringItem.Attachment.Style
+    
+    let view: UIView
+    let style: Style
+    
+    private var observation: [String: NSKeyValueObservation] = [:]
+    
+    init(_ view: UIView, with style: Style) {
+        self.view = view
+        self.style = style
+        super.init(frame: view.bounds)
+        
+        clipsToBounds = true
+        backgroundColor = .clear
+        
+        addSubview(view)
+        
+        // 监听子视图位置变化 固定位置
+        observation["frame"] = view.observe(\.frame) { [weak self] (object, changed) in
+            guard let self = self else { return }
+            self.update()
+        }
+        observation["bounds"] = view.observe(\.bounds) { [weak self] (object, changed) in
+            guard let self = self else { return }
+            self.update()
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        update()
+    }
+    
+    private func update() {
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        view.center = .init(bounds.width * 0.5, bounds.height * 0.5)
+        switch style.mode {
+        case .proposed:
+            view.transform = .init(
+                scaleX: bounds.width / view.bounds.width,
+                y: bounds.height / view.bounds.height
+            )
+            
+        case .original:
+            let ratio = view.bounds.width / view.bounds.height
+            view.transform = .init(
+                scaleX: bounds.width / view.bounds.width,
+                y: bounds.width / ratio / view.bounds.height
+            )
+            
+        case .custom(let size):
+            view.transform = .init(
+                scaleX: size.width / view.bounds.width,
+                y: size.height / view.bounds.height
+            )
+        }
+        CATransaction.commit()
+    }
+}

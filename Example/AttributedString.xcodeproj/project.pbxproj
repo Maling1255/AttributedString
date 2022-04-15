@@ -27,6 +27,19 @@
 		F86023012806ABD200EFEE9A /* LigatureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86023002806ABD200EFEE9A /* LigatureController.swift */; };
 		F86023032806AC6E00EFEE9A /* UnderlineController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86023022806AC6E00EFEE9A /* UnderlineController.swift */; };
 		F860230528081B3800EFEE9A /* TestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F860230428081B3800EFEE9A /* TestController.swift */; };
+		F8602309280954F200EFEE9A /* KernController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8602308280954F100EFEE9A /* KernController.swift */; };
+		F860230B2809550A00EFEE9A /* StrikethroughController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F860230A2809550A00EFEE9A /* StrikethroughController.swift */; };
+		F860230D2809576F00EFEE9A /* StrokeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F860230C2809576F00EFEE9A /* StrokeController.swift */; };
+		F860230F280957B900EFEE9A /* ShadowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F860230E280957B900EFEE9A /* ShadowController.swift */; };
+		F8602311280957F500EFEE9A /* TextEffectController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8602310280957F500EFEE9A /* TextEffectController.swift */; };
+		F86023132809583F00EFEE9A /* AttachmentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86023122809583F00EFEE9A /* AttachmentController.swift */; };
+		F86023152809588300EFEE9A /* LinkController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86023142809588300EFEE9A /* LinkController.swift */; };
+		F8602317280958D400EFEE9A /* BaselineOffsetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8602316280958D400EFEE9A /* BaselineOffsetController.swift */; };
+		F8602319280958FB00EFEE9A /* ExpansionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8602318280958FB00EFEE9A /* ExpansionController.swift */; };
+		F860231B2809592900EFEE9A /* ObliquenessController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F860231A2809592900EFEE9A /* ObliquenessController.swift */; };
+		F860231D2809595500EFEE9A /* WritingDirectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F860231C2809595500EFEE9A /* WritingDirectionController.swift */; };
+		F860231F2809599100EFEE9A /* VerticalGlyphFormController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F860231E2809599100EFEE9A /* VerticalGlyphFormController.swift */; };
+		F8602321280959BB00EFEE9A /* ActionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8602320280959BB00EFEE9A /* ActionController.swift */; };
 		F86425F827F19E10002AD9E1 /* AttributedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86425F727F19E10002AD9E1 /* AttributedController.swift */; };
 		F864260627F1AA47002AD9E1 /* Attributed.swift in Sources */ = {isa = PBXBuildFile; fileRef = F864260427F1AA47002AD9E1 /* Attributed.swift */; };
 		F864260727F1AA47002AD9E1 /* AttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = F864260527F1AA47002AD9E1 /* AttributedString.swift */; };
@@ -81,6 +94,19 @@
 		F86023002806ABD200EFEE9A /* LigatureController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LigatureController.swift; sourceTree = "<group>"; };
 		F86023022806AC6E00EFEE9A /* UnderlineController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnderlineController.swift; sourceTree = "<group>"; };
 		F860230428081B3800EFEE9A /* TestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestController.swift; sourceTree = "<group>"; };
+		F8602308280954F100EFEE9A /* KernController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KernController.swift; sourceTree = "<group>"; };
+		F860230A2809550A00EFEE9A /* StrikethroughController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrikethroughController.swift; sourceTree = "<group>"; };
+		F860230C2809576F00EFEE9A /* StrokeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeController.swift; sourceTree = "<group>"; };
+		F860230E280957B900EFEE9A /* ShadowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowController.swift; sourceTree = "<group>"; };
+		F8602310280957F500EFEE9A /* TextEffectController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEffectController.swift; sourceTree = "<group>"; };
+		F86023122809583F00EFEE9A /* AttachmentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentController.swift; sourceTree = "<group>"; };
+		F86023142809588300EFEE9A /* LinkController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkController.swift; sourceTree = "<group>"; };
+		F8602316280958D400EFEE9A /* BaselineOffsetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaselineOffsetController.swift; sourceTree = "<group>"; };
+		F8602318280958FB00EFEE9A /* ExpansionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpansionController.swift; sourceTree = "<group>"; };
+		F860231A2809592900EFEE9A /* ObliquenessController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObliquenessController.swift; sourceTree = "<group>"; };
+		F860231C2809595500EFEE9A /* WritingDirectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WritingDirectionController.swift; sourceTree = "<group>"; };
+		F860231E2809599100EFEE9A /* VerticalGlyphFormController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalGlyphFormController.swift; sourceTree = "<group>"; };
+		F8602320280959BB00EFEE9A /* ActionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionController.swift; sourceTree = "<group>"; };
 		F86425F727F19E10002AD9E1 /* AttributedController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedController.swift; sourceTree = "<group>"; };
 		F864260427F1AA47002AD9E1 /* Attributed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attributed.swift; sourceTree = "<group>"; };
 		F864260527F1AA47002AD9E1 /* AttributedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributedString.swift; sourceTree = "<group>"; };
@@ -223,7 +249,20 @@
 				F86022FC28067E8700EFEE9A /* ForegroundController.swift */,
 				F86022FE2806AB2B00EFEE9A /* BackgroundController.swift */,
 				F86023002806ABD200EFEE9A /* LigatureController.swift */,
+				F8602308280954F100EFEE9A /* KernController.swift */,
+				F860230A2809550A00EFEE9A /* StrikethroughController.swift */,
 				F86023022806AC6E00EFEE9A /* UnderlineController.swift */,
+				F860230C2809576F00EFEE9A /* StrokeController.swift */,
+				F860230E280957B900EFEE9A /* ShadowController.swift */,
+				F8602310280957F500EFEE9A /* TextEffectController.swift */,
+				F86023122809583F00EFEE9A /* AttachmentController.swift */,
+				F86023142809588300EFEE9A /* LinkController.swift */,
+				F8602316280958D400EFEE9A /* BaselineOffsetController.swift */,
+				F8602318280958FB00EFEE9A /* ExpansionController.swift */,
+				F860231A2809592900EFEE9A /* ObliquenessController.swift */,
+				F860231C2809595500EFEE9A /* WritingDirectionController.swift */,
+				F860231E2809599100EFEE9A /* VerticalGlyphFormController.swift */,
+				F8602320280959BB00EFEE9A /* ActionController.swift */,
 			);
 			name = AttributedController;
 			sourceTree = "<group>";
@@ -408,11 +447,13 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AttributedString_Example/Pods-AttributedString_Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/AttributedString/AttributedString.framework",
+				"${BUILT_PRODUCTS_DIR}/Toast/Toast.framework",
+				"${BUILT_PRODUCTS_DIR}/Toast-Swift/Toast_Swift.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AttributedString.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Toast.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Toast_Swift.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -471,7 +512,9 @@
 				F83CFE9C27FD6B5900BD0210 /* ArrayExtension.swift in Sources */,
 				F860230528081B3800EFEE9A /* TestController.swift in Sources */,
 				F864261627F6D9FD002AD9E1 /* ObjectExtension.swift in Sources */,
+				F860230B2809550A00EFEE9A /* StrikethroughController.swift in Sources */,
 				F86022FF2806AB2B00EFEE9A /* BackgroundController.swift in Sources */,
+				F8602317280958D400EFEE9A /* BaselineOffsetController.swift in Sources */,
 				F864261827F6DEE7002AD9E1 /* Action.swift in Sources */,
 				F864260627F1AA47002AD9E1 /* Attributed.swift in Sources */,
 				F864260727F1AA47002AD9E1 /* AttributedString.swift in Sources */,
@@ -480,15 +523,26 @@
 				F864260C27F55605002AD9E1 /* CGRectExtension.swift in Sources */,
 				F86425F827F19E10002AD9E1 /* AttributedController.swift in Sources */,
 				F83CFEA02800385200BD0210 /* AttributedListController.swift in Sources */,
+				F860231D2809595500EFEE9A /* WritingDirectionController.swift in Sources */,
 				F86023012806ABD200EFEE9A /* LigatureController.swift in Sources */,
+				F860231F2809599100EFEE9A /* VerticalGlyphFormController.swift in Sources */,
 				F86022FB28067DDF00EFEE9A /* ParagraphStyleController.swift in Sources */,
 				F83CFEA228003E7D00BD0210 /* FontController.swift in Sources */,
 				F864260927F53FC7002AD9E1 /* Attachment.swift in Sources */,
+				F860231B2809592900EFEE9A /* ObliquenessController.swift in Sources */,
+				F8602309280954F200EFEE9A /* KernController.swift in Sources */,
+				F8602319280958FB00EFEE9A /* ExpansionController.swift in Sources */,
 				F864261127F6ACC4002AD9E1 /* TextViewExtension.swift in Sources */,
+				F8602321280959BB00EFEE9A /* ActionController.swift in Sources */,
+				F8602311280957F500EFEE9A /* TextEffectController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				F83CFE9E280034C400BD0210 /* UIlabelExtension.swift in Sources */,
+				F86023132809583F00EFEE9A /* AttachmentController.swift in Sources */,
+				F860230F280957B900EFEE9A /* ShadowController.swift in Sources */,
+				F860230D2809576F00EFEE9A /* StrokeController.swift in Sources */,
 				F83CFE9727FD2F4000BD0210 /* Checking.swift in Sources */,
 				F864261B27F7FCB6002AD9E1 /* ParagraphStyle.swift in Sources */,
+				F86023152809588300EFEE9A /* LinkController.swift in Sources */,
 				F864260E27F6AC5F002AD9E1 /* Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

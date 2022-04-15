@@ -25,7 +25,22 @@ class AttributedListController: UITableViewController {
             Model(title: "Foreground", explain: "前景色"),
             Model(title: "Background", explain: "背景色"),
             Model(title: "Ligature", explain: "连体字"),
+            Model(title: "Kern", explain: "字间距"),
+            Model(title: "Strikethrough", explain: "删除线"),
             Model(title: "Underline", explain: "下划线"),
+            
+            Model(title: "Stroke", explain: "描边"),
+            Model(title: "Shadow", explain: "阴影"),
+            Model(title: "TextEffect", explain: "凸版"),
+            Model(title: "Attachment", explain: "附件"),
+            Model(title: "Link", explain: "URL"),
+            Model(title: "BaselineOffset", explain: "基准线偏移"),
+            Model(title: "Expansion", explain: "拉伸/压缩"),
+            Model(title: "Obliqueness", explain: "斜体"),
+            Model(title: "WritingDirection", explain: "书写方向"),
+            Model(title: "VerticalGlyphForm", explain: "纵向排版"),
+            Model(title: "Action", explain: "点击动作"),
+            Model(title: "Checking", explain: "文本检查"),
             
             
             Model(title: "Test", explain: "🔥测试控制器"),
@@ -60,6 +75,7 @@ class AttributedListController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         
         let modes = modes[indexPath.row]
         
@@ -71,16 +87,19 @@ class AttributedListController: UITableViewController {
         var string = modes.title
         string.append("Controller")
 
-        let anyClass: AnyClass! =  swiftClassFromString(className: string)
+        guard let anyClass: AnyClass =  swiftClassFromString(className: string) else {
+            view.window?.makeToast("\(string)还没有被创建出来")
+            return
+        }
+
         let subClass = anyClass as! UIViewController.Type
         
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let baseVC: AttributedController = storyboard.instantiateViewController(withIdentifier: "AttributedController_id") as! AttributedController
         
-        baseVC.title = " \(modes.title) "
+        baseVC.title = " \(modes.explain) "
         
-        
-        
+
         
         // 当前指针指向子类
         object_setClass(baseVC, subClass)

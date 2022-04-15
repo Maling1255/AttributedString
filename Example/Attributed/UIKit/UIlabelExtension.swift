@@ -12,6 +12,8 @@ private var UIGestureRecognizerKey: Void?
 private var UILabelTouchedKey: Void?
 private var UILabelActionsKey: Void?
 private var UILabelObserversKey: Void?
+private var UILabelObservationsKey: Void?
+private var UILabelAttachmentViewsKey: Void?
 
 extension UILabel: AttributedStringCompatible {
     
@@ -49,10 +51,122 @@ extension AttributedStringWrapper where Base: UILabel {
                 base.attributedText = newValue?.value
                 
             }
+            
+            setupViewAttachments(newValue)
         }
     }
 }
 
+extension AttributedStringWrapper where Base: UILabel {
+    
+    private(set) var gestures: [UIGestureRecognizer] {
+        get { base.associated.get(&UIGestureRecognizerKey) ?? [] }
+        set { base.associated.set(retain: &UIGestureRecognizerKey, newValue) }
+    }
+    
+    private(set) var observations: [String: NSKeyValueObservation] {
+        get { base.associated.get(&UILabelObservationsKey) ?? [:] }
+        set { base.associated.set(retain: &UILabelObservationsKey, newValue) }
+    }
+    
+    /// 设置自定义视图
+    private func setupViewAttachments(_ string: AttributedString?) {
+        guard let string = string else {
+            return
+        }
+            
+        // 清理所有的监听
+        observations = [:]
+        
+        // 刷新的时候清理已经添加的自定义视图, 为了后面重新添加
+        for view in base.subviews where view is AttachmentView {
+            view.removeFromSuperview()
+        }
+        base.attachmentViews = [:]
+        
+        // 从attributedString获取自定义附件视图
+        let attachments: [NSRange : AttributedStringItem.ViewAttachment] = string.value.get(.attachment)
+        guard !attachments.isEmpty else {
+            return
+        }
+        
+        // 添加自定义的附件子视图
+        attachments.forEach { (range, attachment) in
+            let view = AttachmentView(attachment.view, with: attachment.style)
+            
+            base.addSubview(view)
+            base.attachmentViews[range] = view
+        }
+        
+        print("intrinsicContentSize:", base.intrinsicContentSize)
+        
+        // 刷新布局
+//        base.layout()
+        
+    }
+}
+
+// MARK: 处理 attachmentViews
+fileprivate extension UILabel {
+    
+    /// 附件视图
+    var attachmentViews: [NSRange: AttachmentView] {
+        get { associated.get(&UILabelAttachmentViewsKey) ?? [:] }
+        set { associated.set(retain: &UILabelAttachmentViewsKey, newValue) }
+    }
+    
+    /// 布局
+    /// - Parameter isVisible: 是否仅可视范围
+//    func layout(_ isVisible: Bool = false) {
+//        guard !attachmentViews.isEmpty else {
+//            return
+//        }
+//
+//        // range : 自定义视图所在的位置
+//        func update(_ range: NSRange, _ view: AttachmentView) {
+//            view.isHidden = false
+//            // glyphRange 获取图像字形(即自定义视图view)范围
+//            let glyphRange = layoutManager.glyphRange(forCharacterRange: range, actualCharacterRange: nil)
+//            // 获取自定义view边界大小
+//            var rect = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
+//            rect.origin.x += textContainerInset.left
+//            rect.origin.y += textContainerInset.top
+//            // 🔥设置view位置
+//            view.frame = rect
+//        }
+//
+//        if isVisible {
+//            // 获取可见范围
+//            let offset = CGPoint(contentOffset.x - textContainerInset.left, contentOffset.y - textContainerInset.top)
+//            let visible = layoutManager.glyphRange(forBoundingRect: .init(offset, bounds.size), in: textContainer)
+//            // 更新可见范围内的视图位置 同时隐藏可见范围外的视图
+//            for (range, view) in attachmentViews {
+//                if visible.contains(range.location) {
+//                    // 确保布局
+//                    layoutManager.ensureLayout(forCharacterRange: range)
+//                    // 更新视图
+//                    update(range, view)
+//
+//                } else {
+//                    view.isHidden = true
+//                }
+//            }
+//
+//        } else {
+//            // 完成布局刷新
+//            layoutIfNeeded()
+//            // 废弃当前布局 重新计算
+//            layoutManager.invalidateLayout(
+//                forCharacterRange: .init(location: 0, length: textStorage.length),
+//                actualCharacterRange: nil
+//            )
+//            // 确保布局
+//            layoutManager.ensureLayout(for: textContainer)
+//            // 更新全部自定义视图位置
+//            attachmentViews.forEach(update)
+//        }
+//    }
+}
 
 extension UILabel {
     
@@ -191,8 +305,16 @@ extension AttributedStringWrapper where Base: UILabel {
         if let attributedString = string?.value {
             
             let rangeStyles: [NSRange : NSParagraphStyle] = attributedString.get(.paragraphStyle)
-            for style in rangeStyles {
-                let paragraphStyle = value.setParagraphStyle(style.value)
+            if (rangeStyles.count != 0) {
+                for style in rangeStyles {
+                    let paragraphStyle = value.setParagraphStyle(style.value)
+                    let att = NSMutableAttributedString(attributedString: attributedString)
+                    att.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attributedString.length))
+                    base.attributedText = att
+                    return att
+                }
+            } else {
+                let paragraphStyle = value.setParagraphStyle(nil)
                 let att = NSMutableAttributedString(attributedString: attributedString)
                 att.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, attributedString.length))
                 base.attributedText = att

@@ -27,10 +27,14 @@ extension AttributedStringItem.Attribute {
 
 extension AttributedStringItem.Attribute.ParagraphStyle {
     
-    public func setParagraphStyle(_ paragraphStyle: NSParagraphStyle) -> NSParagraphStyle {
+    public func setParagraphStyle(_ paragraphStyle: NSParagraphStyle?) -> NSParagraphStyle {
         
         let paragraph = NSMutableParagraphStyle()
-        paragraph.setParagraphStyle(paragraphStyle)
+        if let paragraphStyle = paragraphStyle {
+            paragraph.setParagraphStyle(paragraphStyle)
+        } else {
+            paragraph.setParagraphStyle(NSParagraphStyle())
+        }
         
         func fetch<Value>(_ key: Key, completion: (Value)->()) {
              guard let value = style[key] as? Value else { return }

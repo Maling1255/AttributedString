@@ -1,5 +1,5 @@
 import XCTest
-import AttributedString
+//import AttributedString
 
 class Tests: XCTestCase {
     

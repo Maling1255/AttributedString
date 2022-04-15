@@ -5,14 +5,20 @@ PODS:
   - FBSnapshotTestCase/Core (2.1.4)
   - FBSnapshotTestCase/SwiftSupport (2.1.4):
     - FBSnapshotTestCase/Core
+  - Toast (4.0.0)
+  - Toast-Swift (5.0.1)
 
 DEPENDENCIES:
   - AttributedString (from `../`)
   - FBSnapshotTestCase (~> 2.1.4)
+  - Toast
+  - Toast-Swift
 
 SPEC REPOS:
   trunk:
     - FBSnapshotTestCase
+    - Toast
+    - Toast-Swift
 
 EXTERNAL SOURCES:
   AttributedString:
@@ -21,7 +27,9 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AttributedString: 1ab8053ab5eb600f0c75eb17a7b4e1653cebf838
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
+  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
+  Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
 
-PODFILE CHECKSUM: 793df991af3dab2edd34cb8a724e8143d95252da
+PODFILE CHECKSUM: dd1814ea6290c4cfddd37ac35c8fb02721bf45de
 
 COCOAPODS: 1.11.2
