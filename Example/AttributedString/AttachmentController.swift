@@ -15,9 +15,9 @@ class AttachmentController: AttributedController {
 
         
         // 创建一些自定义视图控件
-        let customView = UIView(frame: .init(x: 0, y: 0, width: 100, height: 100))
-        customView.backgroundColor = .red
-        let customView2 = UIView(frame: .init(x: 0, y: 0, width: 100, height: 100))
+        let customView = UIView(frame: .init(x: 0, y: 0, width: 100, height: 150))
+        customView.backgroundColor = .brown
+        let customView2 = UIView(frame: .init(x: 0, y: 0, width: 350, height: 100))
         customView2.backgroundColor = .red
         
         
@@ -42,36 +42,48 @@ class AttachmentController: AttributedController {
         customLabel2.sizeToFit()
         
         
-        let attachmentAttributedString = AttributedString(
-            .string("建议大小", [.font(.size(21))]),
-            .image(UIImage(named: "swift-icon")!, .proposed(), newline: .trailing),
-            .string("原始大小:", [.font(.size(21))]),
-            .image(UIImage(named: "swift-icon")!, .original(), newline: .trailing),
-            .string("自定义大小", [.font(.size(21))]),
-            .image(UIImage(named: "swift-icon")!, .custom(.center, size: .init(width: 50, height: 50)), newline: .trailing),
-            .view(customView, .original(.center)),
-            .view(customImageView, .original(.origin)),
-            .view(customLabel, .original(.center), newline: .trailing)
-        )
+//        let attachmentAttributedString = AttributedString(
+//            .string("建议大小", [.font(.size(21))]),
+//            .image(UIImage(named: "swift-icon")!, .proposed(), newline: .trailing),
+//            .string("原始大小:", [.font(.size(21))]),
+//            .image(UIImage(named: "swift-icon")!, .original(), newline: .trailing),
+//            .string("自定义大小", [.font(.size(21))]),
+//            .image(UIImage(named: "swift-icon")!, .custom(.center, size: .init(width: 50, height: 50)), newline: .trailing),
+//            .view(customView, .original(.center)),
+//            .view(customImageView, .original(.origin)),
+//            .view(customLabel, .original(.center), newline: .trailing)
+//        )
         
         let attachmentAttributedString2 = AttributedString(
             .string("建议大小", [.font(.size(21))]),
-            .image(UIImage(named: "swift-icon")!, .proposed(), newline: .trailing),
-            .string("原始大小:", [.font(.size(21))]),
-            .image(UIImage(named: "swift-icon")!, .original(), newline: .trailing),
-            .string("自定义大小", [.font(.size(21))]),
-            .image(UIImage(named: "swift-icon")!, .custom(.center, size: .init(width: 50, height: 50)), newline: .trailing),
-            .view(customView2, .original(.center))
-//            .view(customImageView2, .original(.origin)),
+            
+//            .string("原始大小:", [.font(.size(21))]),
+//            .image(UIImage(named: "swift-icon")!, .original(), newline: .none),
+//            .string("自定义大小", [.font(.size(21))]),
+//            .image(UIImage(named: "swift-icon")!, .custom(.center, size: .init(width: 50, height: 50)), newline: .none),
+//            .view(customView2, .original(.center), newline: .none),
+            .view(customView, .original(.center), newline: .none),
+            .view(customLabel2, .original(.center), newline: .none),
+            .image(UIImage(named: "swift-icon")!, .proposed())
+//            .view(customImageView2, .original(.origin))      
 //            .view(customLabel2, .original(.center), newline: .trailing)
+//            .string("建议大小", [.font(.size(21))])
         )
         
-        textView.attributed.string = attachmentAttributedString
+//        textView.attributed.string = attachmentAttributedString
+//        Label.attributed.lineSpacing(10)
         Label.attributed.string = attachmentAttributedString2
         Label.backgroundColor = .cyan
         
+//        Label.sizeToFit()
         
-        print(Label.sizeThatFits(CGSize(1000, 2000)))
+//        let fitSize = Label.sizeThatFits(CGSize(1000, 2000))
+//        Label.frame = CGRect(Label.frame.origin.x, Label.frame.origin.y, fitSize.width, fitSize.height)
+        
+//        print(Label.sizeThatFits(CGSize(1000, 2000)), Label.frame,Label.bounds,  self.view.frame)
+//
+//        print(Label.numberOfLines)
+        
     }
     
 

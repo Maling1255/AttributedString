@@ -219,7 +219,7 @@ extension NSAttributedString {
         return result
     }
     
-    func get<T>(_ key: Key) -> [NSRange: T] {
+    func `get`<T>(_ key: Key) -> [NSRange: T] {
         var result: [NSRange: T] = [:]
         
         // 根据附件(.attachment, .action) 找到所在的范围位置
@@ -234,7 +234,7 @@ extension NSAttributedString {
         return result
     }
     
-    func get(_ range: NSRange) -> [NSRange: [NSAttributedString.Key: Any]] {
+    func `get`(_ range: NSRange) -> [NSRange: [NSAttributedString.Key: Any]] {
         var result: [NSRange: [NSAttributedString.Key: Any]] = [:]
         enumerateAttributes(in: range, options: .longestEffectiveRangeNotRequired) { (attributes, range, stop) in
             result[range] = attributes

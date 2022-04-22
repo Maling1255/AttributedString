@@ -160,7 +160,8 @@ extension AttributedStringWrapper where Base: UITextView {
 
         // 添加子视图
         attachments.forEach {
-            let view = AttachmentView($0.value.view, with: $0.value.style)
+//            let view = AttachmentView($0.value.view, with: $0.value.style)
+            let view = AttachmentView($0.value)
             base.addSubview(view)
             // $0.key 就是range
             base.attachmentViews[$0.key] = view

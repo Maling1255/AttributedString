@@ -14,8 +14,8 @@ class LigatureController: AttributedController {
         super.viewDidLoad()
 
         let ligature = AttributedString(
-            .string("fltytfhijkflmnopqrfistyz\n", [.ligature(true), .font(.name("futura", size: 21)!)]),
-            .string("fltytfhijkflmnopqrfistyz\n", [.ligature(false), .font(.name("futura", size: 21)!)])
+            .string("fltytfhijkfflmnopqrfistyz\n", [.ligature(true), .font(.name("futura", size: 21)!)]),
+            .string("fltytfhijkfflmnopqrfistyz\n", [.ligature(false), .font(.name("futura", size: 21)!)])
         )
         textView.attributed.string = ligature
         Label.attributed.string = ligature

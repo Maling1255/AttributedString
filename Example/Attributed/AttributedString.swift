@@ -17,7 +17,7 @@ public struct AttributedStringItem {
     
     public enum Form {
         public  enum Newline {
-            case not
+            case none
             case leading
             case trailing
         }
@@ -28,7 +28,7 @@ public struct AttributedStringItem {
         case view(Newline)
     }
     
-    let string: String
+    let string: String?
     let attributes: [Attribute]
     let image: UIImage
     let view: UIView
@@ -58,13 +58,13 @@ public struct AttributedStringItem {
     }
     
     // image
-    public static func image(_ image: UIImage, _ style: Style = .original(), newline: Newline = .not) -> AttributedStringItem {
-        return .init(string: "", attributes: [], image: image, view: UIView(), style: style, form: .image(newline))
+    public static func image(_ image: UIImage, _ style: Style = .original(), newline: Newline = .none) -> AttributedStringItem {
+        return .init(string: nil, attributes: [], image: image, view: UIView(), style: style, form: .image(newline))
     }
     
     // view
-    public static func view(_ view: UIView, _ style: Style = .original(), newline: Newline = .not) -> AttributedStringItem {
-        return .init(string: "", attributes: [], image: UIImage(), view: view, style: style, form: .view(newline))
+    public static func view(_ view: UIView, _ style: Style = .original(), newline: Newline = .none) -> AttributedStringItem {
+        return .init(string: nil, attributes: [], image: UIImage(), view: view, style: style, form: .view(newline))
     }
     
 }
@@ -154,32 +154,117 @@ public struct AttributedString {
             switch attribute.form {
             case .string:
                 
-                mutableAttributedString.append(.init(string: attribute.string, attributes: validAttribute))
+                mutableAttributedString.append(.init(string: attribute.string!, attributes: validAttribute))
                 
             case .image(let position):
                 
-                let attachment = AttributedStringItem.ImageAttachment.image(attribute.image, attribute.style)
+                var attachment = AttributedStringItem.ImageAttachment.image(attribute.image, attribute.style)
+                
+                
                 switch position {
                 case .leading:
-                    mutableAttributedString.append(NSMutableAttributedString(string: "\n"))
+                    mutableAttributedString.append(NSAttributedString(string: "\n"))
                     mutableAttributedString.append(NSAttributedString(attachment: attachment))
                 case .trailing:
                     mutableAttributedString.append(NSAttributedString(attachment: attachment))
-                    mutableAttributedString.append(NSMutableAttributedString(string: "\n"))
-                case .not:
-                    mutableAttributedString.append(NSAttributedString(attachment: attachment))
+                    mutableAttributedString.append(NSAttributedString(string: "\n"))
+                case .none:
+//                    mutableAttributedString.append(NSAttributedString(attachment: attachment))
+                    
+                    var emptyChar: UInt16 = 0xFFFC
+                    let emptyString = NSString.init(characters: &emptyChar, length: 1) as String
+                    let attachmentString = NSMutableAttributedString(string: "∂")
+                    attachmentString.setAttributes([.attachment : attachment], range: NSRange(location: 0, length: 1))
+//                    attachmentString.addAttributes([.foregroundColor : UIColor.red, .font : UIFont.size(9), .backgroundColor : UIColor.blue ], range: NSRange(location: 0, length: 1))
+               
+                    
+                     mutableAttributedString.append(attachmentString)
+                    // "å"
                 }
             case .view(let position):
-                let attachment = AttributedStringItem.ViewAttachment.view(attribute.view, attribute.style)
+                var attachment = AttributedStringItem.ViewAttachment.view(attribute.view, attribute.style)
                 switch position {
                 case .leading:
-                    mutableAttributedString.append(NSMutableAttributedString(string: "\n"))
-                    mutableAttributedString.append(NSAttributedString(attachment: attachment))
+                    mutableAttributedString.append(NSAttributedString(string: "\n"))
+                   let attachmentString = NSAttributedString(attachment: attachment)
+                    mutableAttributedString.append(NSAttributedString(attributedString: attachmentString))
                 case .trailing:
-                    mutableAttributedString.append(NSAttributedString(attachment: attachment))
-                    mutableAttributedString.append(NSMutableAttributedString(string: "\n"))
-                case .not:
-                    mutableAttributedString.append(NSAttributedString(attachment: attachment))
+                    
+                    var  imageCallback1 =  CTRunDelegateCallbacks(version: kCTRunDelegateVersion1, dealloc: { (refCon) -> Void in
+                           }, getAscent: { ( refCon) -> CGFloat in
+                               // UnsafeMutableRawPointer
+//                               let attachment: UnsafePointer<AttributedStringItem.ViewAttachment> = UnsafePointer(refCon)
+
+//                               let attach = refCon.load(as: AttributedStringItem.ViewAttachment.self)
+
+//                               let attach = unsafeBitCast(refCon, to: AttributedStringItem.ViewAttachment.self)
+
+
+//                               let attach = UnsafeRawPointer(refCon).load(as: AttributedStringItem.ViewAttachment.self)
+
+//                               print("22 \(attach)")
+                               return 100
+//                               return attach.size.height  //返回高度
+                           }, getDescent: { (refCon) -> CGFloat in
+                               return 50  //返回底部距离
+                           }) { (refCon) -> CGFloat in
+//                               let attach = unsafeBitCast(refCon, to: AttributedStringItem.ViewAttachment.self)
+//                               return attach.size.width  //返回宽度
+                               return 100
+                       }
+                    let urlRunDelegate  = CTRunDelegateCreate(&imageCallback1, &attachment)
+                    var emptyChar: UInt16 = 0xFFFC
+                    let emptyString = NSString.init(characters: &emptyChar, length: 1) as String
+                    
+                    let empty = "\\uFFFC"
+                    let attachmentString = NSMutableAttributedString(string: " ")
+//                    let info = NSDictionary(object: urlRunDelegate as Any, forKey: kCTRunDelegateAttributeName as! NSCopying)
+//                    attachmentString.replaceCharacters(in: NSRange(location: 0, length: 1), with: NSAttributedString(attachment: attachment))
+                    
+//                    attachmentString.beginEditing()å
+//                    attachmentString.setAttributes([.attachment : attachment], range: NSRange(location: 0, length: 1))
+                    attachmentString.addAttributes([.foregroundColor : UIColor.red, .font : UIFont.size(9), .backgroundColor : UIColor.blue ], range: NSRange(location: 0, length: 1))
+                    
+//                    attachmentString.addAttribute(kCTRunDelegateAttributeName, value: <#T##Any#>, range: <#T##NSRange#>)
+//                    attachmentString.replaceCharacters(in: NSRange(location: 0, length: 1), with: emptyString)
+//                    attachmentString.addAttribute(.attachment, value: attachment, range: NSRange(location: 0, length: 1))
+//                    attachmentString.endEditing()
+                    
+                     mutableAttributedString.append(attachmentString)
+                    
+                    
+                    mutableAttributedString.append(NSAttributedString(string: "\n"))
+                case .none:
+//                    mutableAttributedString.append(NSAttributedString(attachment: attachment))
+                    
+                    
+                    var  imageCallback1 =  CTRunDelegateCallbacks(version: kCTRunDelegateVersion1, dealloc: { (refCon) -> Void in
+                           }, getAscent: { ( refCon) -> CGFloat in
+                               return 300
+//                               return attach.size.height  //返回高度
+                           }, getDescent: { (refCon) -> CGFloat in
+                               return 50  //返回底部距离
+                           }) { (refCon) -> CGFloat in
+//                               let attach = unsafeBitCast(refCon, to: AttributedStringItem.ViewAttachment.self)
+//                               return attach.size.width  //返回宽度
+                               return 100
+                       }
+                    
+                    let urlRunDelegate  = CTRunDelegateCreate(&imageCallback1, &attachment)
+                    
+                    var emptyChar: UInt16 = 0xFFFC
+                    let emptyString = NSString.init(characters: &emptyChar, length: 1) as String
+                    let attachmentString = NSMutableAttributedString(string: "å")
+//                    attachmentString.addAttribute(kCTRunDelegateAttributeName as NSAttributedString.Key, value: urlRunDelegate as Any, range: NSRange(location: 0, length: 1))
+                
+                    
+//                    attachmentString.beginEditing()å
+                    attachmentString.setAttributes([.attachment : attachment], range: NSRange(location: 0, length: 1))
+//                    attachmentString.addAttributes([.foregroundColor : UIColor.red, .font : UIFont.size(9), .backgroundColor : UIColor.blue ], range: NSRange(location: 0, length: 1))
+               
+                    
+                     mutableAttributedString.append(attachmentString)
+                    
                 }
             default: break
                 

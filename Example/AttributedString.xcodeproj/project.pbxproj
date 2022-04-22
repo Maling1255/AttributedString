@@ -50,6 +50,7 @@
 		F864261627F6D9FD002AD9E1 /* ObjectExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F864261527F6D9FD002AD9E1 /* ObjectExtension.swift */; };
 		F864261827F6DEE7002AD9E1 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = F864261727F6DEE7002AD9E1 /* Action.swift */; };
 		F864261B27F7FCB6002AD9E1 /* ParagraphStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F864261A27F7FCB5002AD9E1 /* ParagraphStyle.swift */; };
+		F86F79982812A44900674BE5 /* AttttttachmentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86F79972812A44800674BE5 /* AttttttachmentController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -117,6 +118,7 @@
 		F864261527F6D9FD002AD9E1 /* ObjectExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectExtension.swift; sourceTree = "<group>"; };
 		F864261727F6DEE7002AD9E1 /* Action.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		F864261A27F7FCB5002AD9E1 /* ParagraphStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParagraphStyle.swift; sourceTree = "<group>"; };
+		F86F79972812A44800674BE5 /* AttttttachmentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttttttachmentController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -256,6 +258,7 @@
 				F860230E280957B900EFEE9A /* ShadowController.swift */,
 				F8602310280957F500EFEE9A /* TextEffectController.swift */,
 				F86023122809583F00EFEE9A /* AttachmentController.swift */,
+				F86F79972812A44800674BE5 /* AttttttachmentController.swift */,
 				F86023142809588300EFEE9A /* LinkController.swift */,
 				F8602316280958D400EFEE9A /* BaselineOffsetController.swift */,
 				F8602318280958FB00EFEE9A /* ExpansionController.swift */,
@@ -523,6 +526,7 @@
 				F864260C27F55605002AD9E1 /* CGRectExtension.swift in Sources */,
 				F86425F827F19E10002AD9E1 /* AttributedController.swift in Sources */,
 				F83CFEA02800385200BD0210 /* AttributedListController.swift in Sources */,
+				F86F79982812A44900674BE5 /* AttttttachmentController.swift in Sources */,
 				F860231D2809595500EFEE9A /* WritingDirectionController.swift in Sources */,
 				F86023012806ABD200EFEE9A /* LigatureController.swift in Sources */,
 				F860231F2809599100EFEE9A /* VerticalGlyphFormController.swift in Sources */,

@@ -8,6 +8,16 @@
 
 import UIKit
 
+
+extension AttributedString.Attribute {
+    
+    /// 附件
+    public static func attachment(_ value: NSTextAttachment) -> Self {
+        return .init(attributes: [.attachment : value])
+    }
+    
+}
+
 extension AttributedStringItem {
     
     public enum Attachment {
@@ -78,6 +88,7 @@ extension AttributedStringItem {
         
         let view: UIView
         let style: Style
+        var size: CGSize = CGSize.zero
         
         /// Custom View  (Only  support UITextView)
         /// - Parameter view: 视图
@@ -118,16 +129,30 @@ extension AttributedStringItem {
                 let ratio = view.bounds.width / view.bounds.height
                 let width = min(lineFrag.height * ratio, lineFrag.width)
                 let height = width / ratio
-                return .init(point(.init(width, height)), .init(width, height))
+                
+                let rect = CGRect.init(point(.init(width, height)), .init(width, height))
+                
+//                print("ViewAttachment.proposed: \(rect)")
+                size = rect.size
+                return rect
                 
             case .original:
                 let ratio = view.bounds.width / view.bounds.height
                 let width = min(view.bounds.width, lineFrag.width)
                 let height = width / ratio
-                return .init(point(.init(width, height)), .init(width, height))
+                
+                let rect = CGRect.init(point(.init(width, height)), .init(width, height))
+                size = rect.size
+//                print("ViewAttachment.original: \(rect)")
+                
+                return rect
                 
             case .custom(let size):
-                return .init(point(size), size)
+                let rect = CGRect.init(point(size), size)
+                self.size = rect.size
+//                print("ViewAttachment.rect: \(rect)")
+                
+                return rect
             }
         }
         
@@ -210,15 +235,19 @@ fileprivate extension AttributedStringItem.Attachment.Alignment {
 public class AttachmentView: UIView {
     
     typealias Style = AttributedStringItem.Attachment.Style
+    typealias ViewAttachment = AttributedStringItem.ViewAttachment
     
+    let viewAttachment: ViewAttachment
     let view: UIView
     let style: Style
     
     private var observation: [String: NSKeyValueObservation] = [:]
     
-    init(_ view: UIView, with style: Style) {
-        self.view = view
-        self.style = style
+//    init(_ view: UIView, with style: Style) {
+    init(_ viewAttachment: ViewAttachment) {
+        self.viewAttachment = viewAttachment
+        self.view = viewAttachment.view
+        self.style = viewAttachment.style
         super.init(frame: view.bounds)
         
         clipsToBounds = true
@@ -256,14 +285,12 @@ public class AttachmentView: UIView {
                 scaleX: bounds.width / view.bounds.width,
                 y: bounds.height / view.bounds.height
             )
-            
         case .original:
             let ratio = view.bounds.width / view.bounds.height
             view.transform = .init(
                 scaleX: bounds.width / view.bounds.width,
                 y: bounds.width / ratio / view.bounds.height
             )
-            
         case .custom(let size):
             view.transform = .init(
                 scaleX: size.width / view.bounds.width,

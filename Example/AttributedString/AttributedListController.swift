@@ -33,6 +33,7 @@ class AttributedListController: UITableViewController {
             Model(title: "Shadow", explain: "阴影"),
             Model(title: "TextEffect", explain: "凸版"),
             Model(title: "Attachment", explain: "附件"),
+            Model(title: "Attttttachment", explain: "附件2"),
             Model(title: "Link", explain: "URL"),
             Model(title: "BaselineOffset", explain: "基准线偏移"),
             Model(title: "Expansion", explain: "拉伸/压缩"),
