@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import FLEX
 //import AttributedString
 
 
@@ -32,6 +33,11 @@ class AttributedController: UIViewController {
                 
         view.backgroundColor = .white
 
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem.flex_item(withTitle: "FLEX", target: self, action: #selector(toggleExplorer))
+    }
+    
+    @objc func toggleExplorer() {
+        FLEXManager.shared.toggleExplorer()
     }
 }
 

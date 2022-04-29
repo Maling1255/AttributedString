@@ -101,8 +101,9 @@ class AttachmentController: AttributedController {
             .string("建议大小", [.font(.size(21))]),
             
 //            .image(UIImage(named: "swift-icon")!, .original(), newline: .none),
-            .image(UIImage(named: "swift-icon")!, .proposed(), newline: .none),
-            .view(customLabel2, .original(.center), newline: .leading),
+//            .image(UIImage(named: "swift-icon")!, .custom(size: CGSize(50, 50)), newline: .none),
+             .image(UIImage(named: "swift-icon")!, .proposed(), newline: .none),
+            .view(customLabel2, .original(.center), newline: .none),
             .string("建议大小", [.font(.size(21))])
         )
         
@@ -148,9 +149,9 @@ class AttachmentController: AttributedController {
         
         
         
-//        tipViewHeight.constant = 300
-//        tipLeftMargin.constant = 111.88
-        
+        tipViewHeight.constant = 300
+        tipLeftMargin.constant = 85//110.4895
+        //   105
         
 //        Label.sizeToFit()
         

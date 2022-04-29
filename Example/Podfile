@@ -7,10 +7,11 @@ target 'AttributedString_Example' do
 
   pod 'Toast'
   pod 'Toast-Swift'
-  
-  target 'AttributedString_Tests' do
-    inherit! :search_paths
-
-    pod 'FBSnapshotTestCase' , '~> 2.1.4'
-  end
+  pod 'FLEX', :configurations => ['Debug']
+ 
+#  target 'AttributedString_Tests' do
+#    inherit! :search_paths
+#
+#    pod 'FBSnapshotTestCase' , '~> 2.1.4'
+#  end
 end
