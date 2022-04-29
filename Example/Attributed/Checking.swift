@@ -102,6 +102,7 @@ extension AttributedString.Checking {
 
 extension AttributedString {
     
+    typealias ViewAttachment = AttributedStringItem.ViewAttachment
     
     /// 匹配检查(Key不会出现覆盖情况, 优先级range > regex > action > other)
     /// - Parameter checking: 检查类型
@@ -147,6 +148,35 @@ extension AttributedString {
                     let actions = range.value
                     result[range.key] = (.action, .action(actions))
                 }
+            case .attachment:
+                
+                func allow(_ range: NSRange, _ attachment: NSTextAttachment) -> Bool {
+                    return !contains(range) && !(attachment is ViewAttachment)
+                }
+                
+                let attachments: [NSRange : NSTextAttachment] = value.get(.attachment)
+                for attachment in attachments where allow(attachment.key, attachment.value) {
+                    result[attachment.key] = (.attachment, .attachment(attachment.value))
+                }
+            case .link:
+                let links: [NSRange : URL] = value.get(.link)
+                for link in links where !contains(link.key) {
+                    result[link.key] = (.link, .link(link.value))
+                }
+                fallthrough
+                
+            case .date, .address, .phoneNumber, .transitInformation:
+                guard let detector = try? NSDataDetector(types: NSTextCheckingAllTypes) else { return }
+                
+                let matches = detector.matches(in: value.string, options: .init(), range: .init(location: 0, length: value.length))
+                
+                for match in matches where !contains(match.range){
+                    guard let types = match.resultType.map() else { continue }
+                    guard checkings.contains(types) else { continue }
+                    guard let mapped = match.map() else { continue }
+                    
+                    result[match.range] = (types, mapped)
+                }
                 
             default:
                 break
@@ -158,6 +188,46 @@ extension AttributedString {
         
         return result
     }
+}
+
+extension AttributedString {
+    
+    public mutating func add(checkings: [Checking] = .default, _ attributes: [Attribute]) {
+        guard !checkings.isEmpty, !attributes.isEmpty else { return }
+        
+        let attributes = attributes.mergedAction()
+        
+        // 过滤重复的attribute, 重复的取最后添加的
+        var temp: [NSAttributedString.Key : Any] = [:]
+        attributes.forEach { temp.merge($0.attributes, uniquingKeysWith: { $1 }) }
+        
+        let matched = matching(checkings)
+        let string = NSMutableAttributedString(attributedString: value)
+        matched.forEach{ string.addAttributes(temp, range: $0.0) }
+        value = string
+    }
+    
+    public mutating func set(checkings: [Checking] = .default, _ attributes: [Attribute]) {
+        guard !checkings.isEmpty, !attributes.isEmpty else { return }
+        
+        let attributes = attributes.mergedAction()
+        
+        // 过滤重复的attribute, 重复的取最后添加的
+        var temp: [NSAttributedString.Key : Any] = [:]
+        attributes.forEach { temp.merge($0.attributes, uniquingKeysWith: { $1 }) }
+        
+        let matched = matching(checkings)
+        let string = NSMutableAttributedString(attributedString: value)
+        matched.forEach{ string.addAttributes(temp, range: $0.0) }
+        value = string
+    }
+}
+
+public extension Array where Element == AttributedString.Checking {
+    
+    static let `default`: [AttributedString.Checking] = [.date, .link, .address, .phoneNumber,. transitInformation]
+    
+    static let empty: [AttributedString.Checking] = []
 }
 
 fileprivate extension AttributedString.Checking {
@@ -172,8 +242,86 @@ fileprivate extension AttributedString.Checking {
     }
 }
 
+fileprivate extension NSTextCheckingResult.CheckingType {
+    
+    func map() -> AttributedString.Checking? {
+        switch self {
+        case .date:
+            return .date
+        
+        case .link:
+            return .link
+        
+        case .address:
+            return .address
+            
+        case .phoneNumber:
+            return .phoneNumber
+            
+        case .transitInformation:
+            return .transitInformation
+            
+        default:
+            return nil
+        }
+    }
+}
+
+fileprivate extension NSTextCheckingResult {
+    
+    func map() -> AttributedString.Checking.Result? {
+        switch resultType {
+        case .date:
+            return .date(
+                .init(
+                    date: date,
+                    duration: duration,
+                    timeZone: timeZone
+                )
+            )
+        
+        case .link:
+            guard let url = url else { return nil }
+            return .link(url)
+        
+        case .address:
+            guard let components = addressComponents else { return nil }
+            return .address(
+                .init(
+                    name: components[.name],
+                    jobTitle: components[.jobTitle],
+                    organization: components[.organization],
+                    street: components[.street],
+                    city: components[.city],
+                    state: components[.state],
+                    zip: components[.zip],
+                    country: components[.country],
+                    phone: components[.phone]
+                )
+            )
+            
+        case .phoneNumber:
+            guard let number = phoneNumber else { return nil }
+            return .phoneNumber(number)
+            
+        case .transitInformation:
+            guard let components = components else { return nil }
+            return .transitInformation(
+                .init(
+                    airline: components[.airline],
+                    flight: components[.flight]
+                )
+            )
+            
+        default:
+            return nil
+        }
+    }
+}
+
 fileprivate extension NSRange {
     
+    // 范围是否重叠
     func overlap(_ other: NSRange) -> Bool {
         guard let lhs = Range(self), let rhs = Range(other) else {
             return false

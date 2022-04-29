@@ -68,6 +68,15 @@ extension AttributedString.Action.Result {
     public enum Content {
         case string(NSAttributedString)
         case attachment(NSTextAttachment)
+        
+        func value() -> String? {
+            switch self {
+            case .string(let attString):
+                return attString.string
+            case .attachment(_):
+                return nil
+            }
+        }
     }
 }
 

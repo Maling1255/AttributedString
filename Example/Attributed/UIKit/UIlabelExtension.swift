@@ -15,6 +15,7 @@ private var UILabelActionsKey: Void?
 private var UILabelObserversKey: Void?
 private var UILabelObservationsKey: Void?
 private var UILabelAttachmentViewsKey: Void?
+private var UILabelImageAttachmentViewsKey: Void?
 
 private var UILabelCTFrameKey: Void?
 
@@ -55,10 +56,11 @@ extension AttributedStringWrapper where Base: UILabel {
                 let attributedStr = newValue?.value
                 
                 base.attributedText = attributedStr
-                
             }
             
             setupViewAttachments(newValue)
+            setupActions(newValue)
+            setupGestureRecognizers()
         }
     }
 }
@@ -75,6 +77,16 @@ extension AttributedStringWrapper where Base: UILabel {
         set { base.associated.set(retain: &UILabelObservationsKey, newValue) }
     }
     
+    private func setupActions(_ string: AttributedString?) {
+        // 清理原有的actions
+        
+    }
+    
+    private func setupGestureRecognizers() {
+        
+    }
+    
+    
     /// 设置自定义视图
     private func setupViewAttachments(_ string: AttributedString?) {
         guard let string = string else {
@@ -88,28 +100,50 @@ extension AttributedStringWrapper where Base: UILabel {
         for view in base.subviews where view is AttachmentView {
             view.removeFromSuperview()
         }
-        base.attachmentViews = [:]
+        var attachmentViews = [(NSRange, AttachmentView)]()
+        var imageAttachments = [(NSRange, AttributedStringItem.ImageAttachment)]()
         
-        // 从attributedString获取自定义附件视图
-        let attachments: [NSRange : AttributedStringItem.ViewAttachment] = string.value.get(.attachment)
+        // image 附件视图
+        let imageAttachmentInfo: [NSRange: AttributedStringItem.ImageAttachment] = string.value.get(.attachment)
+        let tempImageRanges = imageAttachmentInfo.keys.sorted{ $0.location < $1.location }
+        for range in tempImageRanges {
+            if let attachment = imageAttachmentInfo[range] {
+                imageAttachments.append((range, attachment))
+            }
+        }
+        base.imageAttachments = imageAttachments.reversed()
+
+        // view 附件视图
+        let viewAttachmentInfo: [NSRange : AttributedStringItem.ViewAttachment] = string.value.get(.attachment)
+        let tempViewRanges = viewAttachmentInfo.keys.sorted{ $0.location < $1.location }
+        
+//        assert(viewAttachmentInfo.isEmpty, "Label中不能使用自定义view附件")
 //        guard !attachments.isEmpty else {
 //            return
 //        }
+        tempViewRanges.forEach { range in
+            if let attachment = viewAttachmentInfo[range] {
+                let view = AttachmentView(attachment)
+                base.addSubview(view)
+                attachmentViews.append((range, view))
+            }
+        }
+        base.attachmentViews = attachmentViews.reversed()
         
         // 添加自定义的附件子视图
-        attachments.forEach { (range, attachment) in
-//            let view = AttachmentView(attachment.view, with: attachment.style)
-            let view = AttachmentView(attachment)
-            print("attachment.size:", attachment.size)
-            
-            base.addSubview(view)
-            base.attachmentViews[range] = view
-        }
+//        viewAttachments.forEach { (range, attachment) in
+//            let view = AttachmentView(attachment)
+//            print("attachment.size:", attachment.size)
+//
+//            base.addSubview(view)
+//            base.attachmentViews[range] = view
+//        }
         
 //        print("intrinsicContentSize:", base.intrinsicContentSize)
         
         // 刷新布局
         base.layout()
+        base.layout1()
         
         // 设置视图相关监听 同步更新布局
 //        observations["bounds"] = base.observe(\.bounds, options: [.new, .old]) { (object, changed) in
@@ -119,17 +153,65 @@ extension AttributedStringWrapper where Base: UILabel {
 //            guard changed.newValue?.size != changed.oldValue?.size else { return }
 //            object.layout()
 //        }
+    }
+}
+
+// 处理点击响应事件
+extension UILabel {
+    
+    fileprivate typealias Action = AttributedString.Action
+    fileprivate typealias Checking = AttributedString.Checking
+    fileprivate typealias Highlight = AttributedString.Action.Highlight
+    fileprivate typealias Observers = [Checking : [Checking.Action]]
+    
+    /// action是否启用
+    fileprivate var isActionEnable: Bool {
+        return !actions.isEmpty
+    }
+    
+    /// 触摸
+    fileprivate var touched: (AttributedString, [NSRange: [Action]])? {
+        get { associated.get(&UILabelTouchedKey) }
+        set { associated.set(retain: &UILabelTouchedKey, newValue) }
+    }
+    
+    /// actions
+    fileprivate var actions: [NSRange : [Action]] {
+        get { associated.get(&UILabelActionsKey) ?? [:]}
+        set { associated.set(retain: &UILabelActionsKey, newValue) }
+    }
+    
+    /// 监听信息
+    fileprivate var observers: Observers {
+        get { associated.get(&UILabelObserversKey) ?? [:] }
+        set { associated.set(retain: &UILabelObserversKey, newValue) }
+    }
+    
+    open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard isActionEnable, let string = attributed.string, let touch = touches.first else {
+            super.touchesBegan(touches, with: event)
+            return
+        }
         
     }
+    
+    
+    
+    
 }
 
 // MARK: 处理 attachmentViews
 fileprivate extension UILabel {
     
-    /// 附件视图
-    var attachmentViews: [NSRange: AttachmentView] {
-        get { associated.get(&UILabelAttachmentViewsKey) ?? [:] }
+    /// 自定义附件视图
+    var attachmentViews: [(NSRange, AttachmentView)] {
+        get { associated.get(&UILabelAttachmentViewsKey) ?? [] }
         set { associated.set(retain: &UILabelAttachmentViewsKey, newValue) }
+    }
+    
+    var imageAttachments: [(NSRange, AttributedStringItem.ImageAttachment)] {
+        get { associated.get(&UILabelImageAttachmentViewsKey) ?? [] }
+        set { associated.set(retain: &UILabelImageAttachmentViewsKey, newValue) }
     }
     
     /// CTFrame
@@ -138,39 +220,95 @@ fileprivate extension UILabel {
         set { associated.set(retain: &UILabelCTFrameKey, newValue) }
     }
     
+    class ViewRun {
+        struct Line {
+            var lineFlag: Int
+            
+            // line 中 run 高度和, (也就是累加的)
+            var lineHeight: CGFloat = 0
+        }
+        
+        let x: CGFloat
+        let y: CGFloat
+        var vline: Line
+        let vHeight: CGFloat  // 控件高度
+        let view: AttachmentView?
+        
+        init(x: CGFloat, y: CGFloat, vline: Line, vHeight: CGFloat, view: AttachmentView?) {
+            self.x = x
+            self.y = y
+            self.vline = vline
+            self.vHeight = vHeight
+            self.view = view
+        }
+    }
+    
+    
+    func layout1() {
+//        let textStorage = NSTextStorage()
+//        let textContainer = NSTextContainer(size: bounds.size)
+//        let layoutManager = NSLayoutManager()
+//
+//        textContainer.lineBreakMode = lineBreakMode
+//        textContainer.lineFragmentPadding = 0.0
+//        textContainer.maximumNumberOfLines = numberOfLines
+//        layoutManager.usesFontLeading = false   // UILabel没有使用FontLeading排版
+//        layoutManager.addTextContainer(textContainer)
+//        textStorage.addLayoutManager(layoutManager)
+//        textStorage.setAttributedString(attributedText!)
+//
+//        // 确保布局
+//        layoutManager.ensureLayout(for: textContainer)
+//        // 获取文本所占高度
+//        let height = layoutManager.usedRect(for: textContainer).height
+//        print("height: \(height)")
+//
+//        let glyphRange = layoutManager.glyphRange(forCharacterRange: NSRange(location: 9, length: 1), actualCharacterRange: nil)
+//        var rect = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
+//
+//        print("rect: \(rect)")
+    }
+    
+    
     func layout(_ isVisible: Bool = false) {
 //        guard !attachmentViews.isEmpty else {
 //            return
 //        }
-
-//
-//        self.setNeedsDisplay()
         
-        
-//        let context = UIGraphicsGetCurrentContext()
-//
-//        // 2 转换坐标
-//        context?.textMatrix = .identity
-//        context?.translateBy(x: 0, y: self.bounds.size.height)
-//        context?.scaleBy(x: 1.0, y: -1.0)
-        
-        
-        
-        let attributedString = attributedText!
-        // 必须写上, 调整大小
-        
+        layoutIfNeeded()
         sizeToFit()
-//        autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
+        
+        let textStorage = NSTextStorage()
+        let textContainer = NSTextContainer(size: bounds.size)
+        let layoutManager = NSLayoutManager()
+        
+        textContainer.lineBreakMode = lineBreakMode
+        textContainer.lineFragmentPadding = 0.0
+        textContainer.maximumNumberOfLines = numberOfLines
+        layoutManager.usesFontLeading = false   // UILabel没有使用FontLeading排版
+        layoutManager.addTextContainer(textContainer)
+        textStorage.addLayoutManager(layoutManager)
+        textStorage.setAttributedString(attributedText!)
+        
+        // 确保布局
+        layoutManager.ensureLayout(for: textContainer)
+        // 获取文本所占高度
+        let rect = layoutManager.usedRect(for: textContainer)
+        print("height: \(rect.height), width: \(rect.width)")
+        
+
+        
         
         let ctframe: CTFrame!
         if self.ctFrame == nil {
             let attributedString = attributedText!
-//            let path = UIBezierPath(rect: CGRect(0, 0, 384, 120.5))
-//            let path = UIBezierPath(rect: CGRect(0, 0, 384, self.bounds.size.height))
+            //            let path = UIBezierPath(rect: CGRect(0, 0, 384, 120.5))
+            //            let path = UIBezierPath(rect: CGRect(0, 0, 384, self.bounds.size.height))
             let path = UIBezierPath(rect: self.bounds)
             print("self.bounds: \(self.bounds)")
             
-//            let framesetter = CTFramesetterCreateWithAttributedString(attributedString)
+            //            let framesetter = CTFramesetterCreateWithAttributedString(attributedString)
             
             let typesetter = CTTypesetterCreateWithAttributedString(attributedString)
             let framesetter = CTFramesetterCreateWithTypesetter(typesetter)
@@ -182,48 +320,104 @@ fileprivate extension UILabel {
         } else {
             ctframe = self.ctFrame
         }
-    
+        
+        
         
         let ctLines = CTFrameGetLines(ctframe) as NSArray
         
-        print(ctLines)
+        
         let lineCount = CFArrayGetCount(ctLines)
         // 3.获得每一行的origin, CoreText的origin是在字形的baseLine处的, [ 获取每行的坐标 ]
         var lineOrigins = [CGPoint](repeating: CGPoint.zero, count: lineCount)
         CTFrameGetLineOrigins(ctframe, CFRangeMake(0, 0), &lineOrigins)
- 
         
-        var lineY: CGFloat = 0;
+        // line : (CGFloat, [ViewRun])
+        var viewRunInfo: [Int : [ViewRun]] = [:]
+        
+        
         for i in 0..<lineCount {
-//            let line = CFArrayGetValueAtIndex(lines, i)
-//            let ctLine = ctLines[i] as! CTLine
+            //            let line = CFArrayGetValueAtIndex(lines, i)
+            //            let ctLine = ctLines[i] as! CTLine
             let ctLine = unsafeBitCast(CFArrayGetValueAtIndex(ctLines, i), to: CTLine.self)
             let ctRuns = CTLineGetGlyphRuns(ctLine) as NSArray
             let runCount = CFArrayGetCount(ctRuns)
             
             var lineAscent: CGFloat = 0.0//上缘线
-            var lineDescent: CGFloat = 0.0//下缘线       
+            var lineDescent: CGFloat = 0.0//下缘线
             var lineLeading: CGFloat = 0.0// 行底部留白
             let lineOrigin = lineOrigins[i];
             
             //获取行的字形参数
             CTLineGetTypographicBounds(ctLine, &lineAscent, &lineDescent, &lineLeading);
-//            print("lineAscent:\(lineAscent),lineDescent:\(lineDescent), lineLeading: \(lineLeading)")
+            //            print("lineAscent:\(lineAscent),lineDescent:\(lineDescent), lineLeading: \(lineLeading)")
             
             // 行高
             let lineHeight = lineAscent + lineDescent + lineLeading
             let lineBottomY = lineOrigin.y - lineDescent
-
+            
             guard CFArrayGetCount(ctRuns) > 0 else {
                 continue
             }
+
+            var point: CGPoint = .zero
+            var lineFlag: Int = 0
             
+            func updateLayout(_ viewRun: ViewRun) {
+                
+                guard var viewRuns = viewRunInfo[i] else {
+                    var viewRuns = [ViewRun]()
+                    viewRuns.append(viewRun)
+                    viewRunInfo[i] = viewRuns
+                    return
+                }
+                
+                viewRuns.append(viewRun)
+                viewRunInfo[i] = viewRuns
+                
+                //                viewRun.vline.lineHeight = viewRun.vHeight
+                //
+                //                for run in tempViewRuns {
+                //                    print(run.vline.lineFlag, run.vHeight)
+                //                }
+                
+                // 统计ctLine中 `run`行的最大高度
+                let result = viewRuns.reduce([ 0 : CGFloat(0)]) { partialResult, viewRun in
+                    var partialResult = partialResult
+                    if let height = partialResult[viewRun.vline.lineFlag] {
+                        let maxHeight = max(height, viewRun.vHeight)
+                        partialResult[viewRun.vline.lineFlag] = maxHeight
+                    } else {
+                        partialResult[viewRun.vline.lineFlag] = viewRun.vHeight
+                    }
+                    return partialResult
+                }
+                print(" >>>", result)
+                
+                func sumHeight(_ result: Dictionary<Int, CGFloat>, _ index: Int) -> CGFloat {
+                    var sumHeight: CGFloat = 0
+                    for i in 0 ..< index {
+                        guard let height = result[i] else { continue }
+                        sumHeight += height
+                    }
+                    return sumHeight
+                }
+                
+                // 赋值 同一个ctLinerun相同行 的最大高度
+                viewRunInfo.forEach { (line, viewRuns) in
+                    guard line == i else { return }
+                    viewRuns.forEach { viewRun in
+                        guard let height = result[viewRun.vline.lineFlag] else { return }
+                        viewRun.vline.lineHeight = height + sumHeight(result, viewRun.vline.lineFlag)
+                        guard let view = viewRun.view else { return }
+                        // 布局
+                        view.frame.origin.y = viewRun.vline.lineHeight - view.bounds.size.height
+                        
+                    }
+                }
+                
+            }
             
-            
-            var lastAttHeight: CGFloat = 0
-            var hasNewLine: Bool = true
-            
-            // 遍历 找到attachment     
+            // 遍历 run 找到attachment
             for j in 0..<runCount {
                 let ctRun = unsafeBitCast(CFArrayGetValueAtIndex(ctRuns, j), to: CTRun.self)
                 let runAttributeds = CTRunGetAttributes(ctRun) as NSDictionary
@@ -236,229 +430,164 @@ fileprivate extension UILabel {
                 let lineOrigin = lineOrigins[i];//此行起点
                 
                 var runRect: CGRect = CGRect()
+                
                 //获取此CTRun的上缘线，下缘线,并由此获取CTRun的宽度
                 runRect.size.width = CTRunGetTypographicBounds(ctRun, CFRangeMake(0, 0), &runAscent, &runDescent, &leading)
                 runRect.size.height = runAscent + runDescent
+                
                 runRect.origin.x = lineOrigin.x + CTLineGetOffsetForStringIndex(ctLine, CTRunGetStringRange(ctRun).location, nil)
                 runRect.origin.y = lineBottomY
                 
-                
-                if let view = runAttributeds[NSAttributedString.Key.attachment], view is AttributedStringItem.ViewAttachment {
-                    for (_, containView) in attachmentViews {
-                        if (view as! AttributedStringItem.ViewAttachment).view == containView.view {
-                            lastAttHeight = containView.bounds.size.height
-                        }
+                print("runRect:", runRect, "--", runAscent, "--", runDescent, "--", leading, "view.hieght: \(self.bounds.size.height)")
+                // image
+                if let font: UIFont = runAttributeds[NSAttributedString.Key.font] as? UIFont, font.pointSize == 0.11 {
+                    guard let imageAttachment = imageAttachments.popLast()?.1 else {
+                        continue
                     }
-                } else {
                     
-                    if hasNewLine {
-                        if lastAttHeight > 0 {
-                            lineY += lastAttHeight
-                            
-                            hasNewLine = false
-                        } else {
-                            lineY += runRect.size.height
-                            
-                            hasNewLine = false
-                        }
+//                    print("image.size \(String(describing: imageAttachment.size)),  \(String(describing: imageAttachment.frame)),  \(imageAttachment.bounds)")
+                    
+                    
+                    // 超出范围, 换下一行
+                    if point.x + imageAttachment.size.width > 384.0 {
+                        lineFlag += 1
+                        
+                        point.x = 0
+//                        print("🔥image 超出范围 \(point.x + imageAttachment.size.width) , \(self.frame.size.width)")
                     }
+                    
+                    point.x += imageAttachment.size.width
+                    
+                    let run = ViewRun(x: point.x,
+                                      y: point.y,
+                                      vline: .init(lineFlag: lineFlag),
+                                      vHeight: imageAttachment.size.height,
+                                      view: nil)
+                    
+//                    updateLayout(run)
+                    
+                } else
+                // view
+                if let font: UIFont = runAttributeds[NSAttributedString.Key.font] as? UIFont, font.pointSize == 0.22 {
+                    guard let attachmentView = attachmentViews.popLast()?.1 else {
+                        continue
+                    }
+                    
+                    print(ctRun)
+//                    let a = CTRunGetPositionsPtr(ctRun)
+//                    print("Position.........", a?.pointee)
+                    
+//                    print("view \(String(describing: attachmentView.bounds.size))")
+                    
+                    let viewSize = attachmentView.bounds.size
+                    
+                    // 超出范围, 换下一行
+                    if point.x + viewSize.width > 384.0 {
+                        lineFlag += 1
+//                        print("🔥 view 超出范围 \(point.x + viewSize.width) , \(self.frame.size.width)")
+//                        attachmentView.frame.origin = CGPoint(0, runMaxHigiht)
+                        attachmentView.frame.origin.x = 0;
+                        // 重置
+                        point = attachmentView.frame.origin
+                    } else {
+                        
+//                        if (attachmentView.view.tag == 3) {
+//                            attachmentView.frame.origin = CGPoint(328, runMaxHigiht - attachmentView.bounds.size.height)
+//                        } else {
+//                            attachmentView.frame.origin = CGPoint(point.x, runMaxHigiht - attachmentView.bounds.size.height)
+                        attachmentView.frame.origin.x = point.x;
+//                        }
+                        
+                        
+                    }
+                    attachmentView.lineRunFlag = lineFlag
+                    
+//                    print("😁containView.frame: ", attachmentView.frame, "view.hieght: \(self.frame.size.height)")
+                    
+                    point.x += attachmentView.bounds.size.width
+                    
+                    let run = ViewRun(x: point.x,
+                                      y: point.y,
+                                      vline: .init(lineFlag: lineFlag),
+                                      vHeight: attachmentView.bounds.size.height,
+                                      view: attachmentView)
+//                    updateLayout(run)
+                    
+                    let range = CTRunGetStringRange(ctRun)
+                    let glyphRange = layoutManager.glyphRange(forCharacterRange: NSRange(location: range.location, length: 1), actualCharacterRange: nil)
+                    let rect = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
+                    
+                    attachmentView.frame = CGRect(rect.origin.x, rect.origin.y, attachmentView.viewAttachment.size.width, attachmentView.viewAttachment.size.height)
+                    
+                    print("--->", attachmentView.frame)
+                } else {
+                    if point.x + runRect.size.width > 384.0 {
+                        
+//                        let a = CTRunGetPositionsPtr(ctRun)
+//                        print("Position.........", a?.pointee)
+//
+//                        let b = CTRunGetStringIndicesPtr(ctRun)
+//                        print("index.........", b?.pointee)
+//                        print("mmmmmmm \(CTRunGetStringRange(ctRun))")
+//
+//                        print("string:::  \(ctRun)")
+//
+//                        print("CGGlyph:::  \(CTRunGetGlyphsPtr(ctRun)?.pointee)")
+//
+//                        var glyphs: [CGGlyph] = [CGGlyph](repeating: 0, count: 8)
+//                        CTRunGetGlyphs(ctRun, CFRange(location: 0,length: 0), &glyphs)
+//
+//                        print("glyphs IIIII  \(glyphs)")
+//
+//                        print("JJJJ  \( CTRunGetAdvancesPtr(ctRun))")
+//
+//                        var sizes: [CGSize] = [CGSize](repeating: .zero, count: 8)
+//                        CTRunGetAdvances(ctRun, CFRange(location: 0,length: 8), &sizes)
+//                        print("Size:: \(sizes)")
+//
+//                        var points: [CGPoint] = [CGPoint](repeating: .zero, count: 8)
+//                        CTRunGetPositions(ctRun, CFRange(location: 0,length: 8), &points)
+//                        print("points:: \(points)")
+                        
+                        
+//                        lineFlag += 1
+//
+                        point.x = 0
+                        point.x += runRect.size.width
+//
+//                        // 文字换行
+//                        let size = sizes[0]
+//                        var count = 1
+//                        while true  {
+//                            if (point.x + size.width * CGFloat(count) > 384.0) {
+//                                break
+//                            }
+//                            count += 1
+//                        }
+//                        count = count - 1 > 0 ? count - 1 : 0
+//                        point.x -= size.width * CGFloat(count)
+                        
+                    } else {
+                        point.x += runRect.size.width
+                    }
+                    
+                    
+                    point.y = runRect.size.height
+                    
+                    let run = ViewRun(x: point.x,
+                                      y: point.y,
+                                      vline: .init(lineFlag: lineFlag),
+                                      vHeight: runRect.size.height,
+                                      view: nil)
+//                    updateLayout(run)
                 }
                 
-                
-                
-//                print(ctRun)
-                print("runRect:", runRect, "--", runAscent, "--", runDescent, "--", leading)
-                if let view = runAttributeds[NSAttributedString.Key.attachment], view is AttributedStringItem.ViewAttachment {
-                    for (_, containView) in attachmentViews {
-                        if (view as! AttributedStringItem.ViewAttachment).view == containView.view {
-//                            containView.frame = runRect
-                            
-                            let size = containView.bounds.size
-                            containView.frame = CGRect(runRect.origin.x,
-//                                                       self.bounds.size.height - runRect.origin.y - runRect.size.height - leading,
-//                                                       self.bounds.size.height -  254.240234375,
-//                                                       runRect.origin.y + runRect.size.height,
-                                                       // 25.060546875
-                                                       lineY,
-                                                       size.width,
-                                                       size.height)
-                            print("😁containView.frame: ", containView.frame, "view.hieght: \(self.bounds.size.height)")
-                            continue
-                        }
-                    }
-                }
             }
             
             print("\n ---------------- line --------------  \n")
         }
-            
-                 
-            }
-            
-
-    
-//    func layout(_ isVisible: Bool = false) {
-//        guard !attachmentViews.isEmpty else {
-//            return
-//        }
-//
-////
-////        self.setNeedsDisplay()
-//
-//
-//        let context = UIGraphicsGetCurrentContext()
-//
-//        // 2 转换坐标
-//        context?.textMatrix = .identity
-//        context?.translateBy(x: 0, y: self.bounds.size.height)
-//        context?.scaleBy(x: 1.0, y: -1.0)
-//
-//
-//
-//        let attributedString = attributedText!
-//        // 必须写上, 调整大小
-//        sizeToFit()
-//
-//        let ctframe: CTFrame!
-//        if self.ctFrame == nil {
-//            let attributedString = attributedText!
-//            let path = UIBezierPath(rect: CGRect(0, 0, 384, 120.5))
-////            let path = UIBezierPath(rect: CGRect(0, 0, 384, self.bounds.size.height))
-////            let path = UIBezierPath(rect: self.bounds)
-//            print("self.bounds: \(self.bounds)")
-//
-//
-//            let framesetter = CTFramesetterCreateWithAttributedString(attributedString)
-//            let frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, attributedString.length), path.cgPath, nil)
-//            ctframe = frame
-//            self.ctFrame = frame
-//        } else {
-//            ctframe = self.ctFrame
-//        }
-////        CTFrameDraw(frame, context)
-//
-//
-//        let ctLines = CTFrameGetLines(ctframe) as NSArray
-//        let lineCount = CFArrayGetCount(ctLines)
-//        // 3.获得每一行的origin, CoreText的origin是在字形的baseLine处的, [ 获取每行的坐标 ]
-//        var lineOrigins = [CGPoint](repeating: CGPoint.zero, count: lineCount)
-//        CTFrameGetLineOrigins(ctframe, CFRangeMake(0, 0), &lineOrigins)
-////        CTFrameGetLineOrigins(ctframe, CFRangeMake(0, lineCount), &lineOrigins)
-//
-//        for i in 0..<lineCount {
-////            let line = CFArrayGetValueAtIndex(lines, i)
-//            let ctLine: CTLine = ctLines[i] as! CTLine
-//            var lineAscent: CGFloat = 0.0//上缘线
-//            var lineDescent: CGFloat = 0.0//下缘线
-//            var lineLeading: CGFloat = 0.0// 行底部留白
-//            //获取行的字形参数
-//            CTLineGetTypographicBounds(ctLine, &lineAscent, &lineDescent, &lineLeading);
-////            print("lineAscent:\(lineAscent),lineDescent:\(lineDescent), lineLeading: \(lineLeading)")
-//
-//            //获取此行中每个CTRun
-//            let ctRuns = CTLineGetGlyphRuns(ctLine) as NSArray
-//            guard CFArrayGetCount(ctRuns) > 0 else {
-//                continue
-//            }
-//
-//            let runsCount = CFArrayGetCount(ctRuns)
-//            for j in 0 ..< runsCount  {
-//                var runAscent: CGFloat = 0//此CTRun上缘线
-//                var runDescent: CGFloat = 0//此CTRun下缘线
-//                let lineOrigin = lineOrigins[i];//此行起点
-//
-//
-////                let run = CFArrayGetValueAtIndex(runs, j);//获取此CTRun
-//                let ctRun: CTRun = ctRuns[j] as! CTRun //获取此CTRun
-//                let attributes: NSDictionary = CTRunGetAttributes(ctRun) as NSDictionary;
-////                print(attributes)
-//
-//                var leading: CGFloat = 0
-//                var runRect: CGRect = CGRect()
-//                //获取此CTRun的上缘线，下缘线,并由此获取CTRun和宽度
-//                runRect.size.width = CTRunGetTypographicBounds(ctRun, CFRangeMake(0, 0), &runAscent, &runDescent, &leading);
-//
-//                //CTRun的X坐标
-//                let runOrgX = lineOrigin.x + CTLineGetOffsetForStringIndex(ctLine, CTRunGetStringRange(ctRun).location, nil);
-//                runRect = CGRect(runOrgX, lineOrigin.y-runDescent, runRect.size.width, runAscent + runDescent)
-//
-//
-////                let _size = sizeForText(mutableAttrStr: attributedString)
-////                let lineHeight = _size.height/CGFloat(lineCount)
-////                print("1>>>> \(runAscent), \(runDescent), \(lineOrigin), \(_size), \(lineHeight), \(runRect)")
-//                print("1>>>> \(runAscent), \(runDescent), \(lineOrigin)")
-//
-//
-    
-    
-    
-//                if let view = attributes[NSAttributedString.Key.attachment], view is AttributedStringItem.ViewAttachment {
-////                    print("NSTextAttachment  ",view as! NSTextAttachment)
-//
-//                    for (_, containView) in attachmentViews {
-//
-//                        // 🔥设置view位置
-//                        print("开始布局View:", containView.viewAttachment.size)
-//
-////                        let size = containView.viewAttachment.size
-//
-//                        let size = containView.bounds.size
-//
-////                        print(">>", runRect.origin.x, lineOrigin.x, lineOrigin.y - runDescent, size.width, size.height)
-//
-//                        // 75.5 差距是48
-////                        containView.frame = CGRect(runRect.origin.x + lineOrigin.x, 75.5, size.width, size.height)
-//
-//                        containView.frame = CGRect(runRect.origin.x + lineOrigin.x, self.bounds.size.height - size.height, size.width, size.height)
-//
-//                        print("...", containView.frame)
-//                    }
-//
-//                }
-//
-//
-//
-//
-////                NSString *imgName = [attributes objectForKey:kImgName];
-////
-////                if (imgName) {
-////                    UIImage *image = [UIImage imageNamed:imgName];
-////                    if(image){
-////                        CGRect imageRect ;
-////                        imageRect.size = image.size;
-////                        imageRect.origin.x = runRect.origin.x + lineOrigin.x;
-////                        imageRect.origin.y = lineOrigin.y;
-////                        CGContextDrawImage(context, imageRect, image.CGImage);
-////                    }
-////                }
-//            }
-//            print("\n\n")
-//        }
-//
-//
-//        print(self.sizeThatFits(.zero))
-//    }
-    
-}
-
-extension UILabel {
-    
-    fileprivate typealias Action = AttributedString.Action
-    fileprivate typealias Checking = AttributedString.Checking
-    fileprivate typealias Highlight = AttributedString.Action.Highlight
-    fileprivate typealias Observers = [Checking: [Checking.Action]]
-    
-    /// 当前触摸
-    fileprivate var touched: (AttributedString, [NSRange: [Action]])? {
-        get { associated.get(&UILabelTouchedKey) }
-        set { associated.set(retain: &UILabelTouchedKey, newValue) }
-    }
-    
-    open override func draw(_ rect: CGRect) {
-        super.draw(rect)
     }
 }
-
 
 extension AttributedStringWrapper where Base: UILabel {
     

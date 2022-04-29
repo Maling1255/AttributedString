@@ -99,6 +99,7 @@
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vZy-Au-OQn">
                                                 <rect key="frame" x="5" y="41" width="345" height="20.5"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                 <nil key="highlightedColor"/>
@@ -124,6 +125,14 @@
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                             </textView>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hcE-hr-bNx">
+                                                <rect key="frame" x="5" y="41" width="1" height="21"/>
+                                                <color key="backgroundColor" systemColor="systemPinkColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="1" id="jbE-2s-OJy"/>
+                                                    <constraint firstAttribute="height" constant="21" id="xOe-Qk-vop"/>
+                                                </constraints>
+                                            </view>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
@@ -135,11 +144,13 @@
                                             <constraint firstAttribute="trailing" secondItem="rkI-b5-Ern" secondAttribute="trailing" constant="5" id="LKG-K5-ZdY"/>
                                             <constraint firstAttribute="trailing" secondItem="B7W-C0-Rk1" secondAttribute="trailing" constant="5" id="Loa-Ia-qu5"/>
                                             <constraint firstItem="rkI-b5-Ern" firstAttribute="leading" secondItem="cSD-1M-yeD" secondAttribute="leading" constant="5" id="ODl-DV-6jV"/>
+                                            <constraint firstItem="hcE-hr-bNx" firstAttribute="leading" secondItem="vZy-Au-OQn" secondAttribute="leading" id="Zu4-v4-cfm"/>
                                             <constraint firstAttribute="trailing" secondItem="vZy-Au-OQn" secondAttribute="trailing" constant="5" id="aNS-93-iGk"/>
                                             <constraint firstItem="eB2-HZ-jqI" firstAttribute="leading" secondItem="cSD-1M-yeD" secondAttribute="leading" constant="5" id="ftK-ZR-D4T"/>
                                             <constraint firstItem="rkI-b5-Ern" firstAttribute="top" secondItem="B7W-C0-Rk1" secondAttribute="bottom" constant="20" id="rIH-LD-z7u"/>
                                             <constraint firstItem="vZy-Au-OQn" firstAttribute="leading" secondItem="cSD-1M-yeD" secondAttribute="leading" constant="5" id="w0s-og-dci"/>
                                             <constraint firstAttribute="trailing" secondItem="eB2-HZ-jqI" secondAttribute="trailing" constant="5" id="yGC-QH-vzM"/>
+                                            <constraint firstItem="hcE-hr-bNx" firstAttribute="top" secondItem="vZy-Au-OQn" secondAttribute="top" id="zVA-hU-Wy1"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -167,6 +178,8 @@
                         <outlet property="Label" destination="vZy-Au-OQn" id="YT3-dv-VWy"/>
                         <outlet property="textView" destination="rkI-b5-Ern" id="v7H-jP-MwM"/>
                         <outlet property="textViewHeight" destination="Nof-GY-ER4" id="gJT-Ue-oEr"/>
+                        <outlet property="tipLeftMargin" destination="Zu4-v4-cfm" id="Rjz-5P-1c2"/>
+                        <outlet property="tipViewHeight" destination="xOe-Qk-vop" id="U2A-Yh-JbE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3Zj-E8-2WG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -221,6 +234,9 @@
         </systemColor>
         <systemColor name="systemGray3Color">
             <color red="0.7803921568627451" green="0.7803921568627451" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemPinkColor">
+            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

@@ -159,7 +159,6 @@ extension AttributedString.Attribute {
     }
 }
 
-
 public extension Array where Element == AttributedString.Attribute {
     var attributesDictionary: [NSAttributedString.Key: Any] {
         var attributesDict: [NSAttributedString.Key: Any] = [:]

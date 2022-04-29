@@ -12,76 +12,26 @@ import UIKit
 
 
 class AttributedController: UIViewController {
-    
+
     @IBOutlet weak var Label: UILabel!
     @IBOutlet weak var textView: UITextView!
     
     @IBOutlet weak var textViewHeight: NSLayoutConstraint!
 
+    @IBOutlet weak var tipViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var tipLeftMargin: NSLayoutConstraint!
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
         let size = textView.sizeThatFits(CGSize(view.bounds.size.width, 1500))
-        textViewHeight.constant = size.height
+        textViewHeight.constant = size.height + 25
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
+                
         view.backgroundColor = .white
-        
-        
-        
-        
-//        let att = NSMutableAttributedString()
 
-
-
-//        fontAtt.append(foregroundColorAtt)
-//
-
-//        fontAtt.append(backgroundColorAtt)
-//
-
-//        fontAtt.append(underlineAtt)
-//
-
-//
-//
-
-//        fontAtt.append(kernAtt)
-//
-//
-
-//        fontAtt.append(strikethroughAtt)
-//
-//
-
-//
-//
-
-//
-
-//
-//        // this static property is defined on key, and may not be available in this context.
-
-//
-
-//
-//
-
-//
-
-
-        
-
-//
-//
-
-        
-
-        
     }
 }
 

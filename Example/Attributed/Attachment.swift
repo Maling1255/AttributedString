@@ -40,6 +40,8 @@ extension AttributedStringItem {
         public typealias Style = Attachment.Style
         
         private let style: Style
+        var size: CGSize = .zero
+        var frame: CGRect = .zero
         
         init(_ image: UIImage, _ style: Style = .original()) {
             self.style = style
@@ -68,16 +70,27 @@ extension AttributedStringItem {
                 let ratio = image.size.width / image.size.height
                 let width = min(lineFrag.height * ratio, lineFrag.width)
                 let height = width / ratio
-                return .init(point(.init(width, height)), .init(width, height))
+                
+                let rect = CGRect.init(point(.init(width, height)), .init(width, height))
+                size = rect.size
+                frame = rect
+                return rect
                 
             case .original:
                 let ratio = image.size.width / image.size.height
                 let width = min(image.size.width, lineFrag.width)
                 let height = width / ratio
-                return .init(point(.init(width, height)), .init(width, height))
                 
+                let rect = CGRect.init(point(.init(width, height)), .init(width, height))
+                size = rect.size
+                frame = rect
+                return rect
             case .custom(let size):
-                return .init(point(size), size)
+                
+                let rect = CGRect.init(point(size), size)
+                self.size = rect.size
+                frame = rect
+                return rect
             }
         }
     }
@@ -131,8 +144,6 @@ extension AttributedStringItem {
                 let height = width / ratio
                 
                 let rect = CGRect.init(point(.init(width, height)), .init(width, height))
-                
-//                print("ViewAttachment.proposed: \(rect)")
                 size = rect.size
                 return rect
                 
@@ -143,15 +154,11 @@ extension AttributedStringItem {
                 
                 let rect = CGRect.init(point(.init(width, height)), .init(width, height))
                 size = rect.size
-//                print("ViewAttachment.original: \(rect)")
-                
                 return rect
                 
             case .custom(let size):
                 let rect = CGRect.init(point(size), size)
                 self.size = rect.size
-//                print("ViewAttachment.rect: \(rect)")
-                
                 return rect
             }
         }
@@ -230,6 +237,15 @@ fileprivate extension AttributedStringItem.Attachment.Alignment {
     }
 }
 
+private var AttachmentViewLineRunFlagKey: Void?
+extension AttachmentView {
+    
+    /// 记录在 ctRun中的第几行标记
+    var lineRunFlag: Int {
+        get { associated.get(&AttachmentViewLineRunFlagKey) ?? 0  }
+        set { associated.set(retain: &AttachmentViewLineRunFlagKey, newValue) }
+    }
+}
 
 /// 附件视图
 public class AttachmentView: UIView {
@@ -243,7 +259,6 @@ public class AttachmentView: UIView {
     
     private var observation: [String: NSKeyValueObservation] = [:]
     
-//    init(_ view: UIView, with style: Style) {
     init(_ viewAttachment: ViewAttachment) {
         self.viewAttachment = viewAttachment
         self.view = viewAttachment.view
