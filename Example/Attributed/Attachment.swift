@@ -68,12 +68,15 @@ extension AttributedStringItem {
             case .proposed:
                 let ratio = image.size.width / image.size.height
                 
-                assert(ratio == 0, "这个位置需要处理")
                 let width = min(lineFrag.height * ratio, lineFrag.width)
                 let height = width / ratio
                 
                 let rect = CGRect.init(point(.init(width, height)), .init(width, height))
-                size = rect.size
+//                if size == .zero {
+                    size = rect.size
+//                }
+                
+                
                 print("proposed: \(size)  \(lineFrag.height) \(lineFrag.width)")
                 
                 return rect
@@ -85,13 +88,11 @@ extension AttributedStringItem {
                 
                 let rect = CGRect.init(point(.init(width, height)), .init(width, height))
                 size = rect.size
-                print("original: \(size)")
                 return rect
             case .custom(let size):
                 
                 let rect = CGRect.init(point(size), size)
                 self.size = rect.size
-                print("custom: \(size)")
                 return rect
             }
         }
@@ -270,7 +271,7 @@ public class AttachmentView: UIView {
         clipsToBounds = true
         backgroundColor = .clear
         
-//        addSubview(view)
+        addSubview(view)
         
         // 监听子视图位置变化 固定位置
         observation["frame"] = view.observe(\.frame) { [weak self] (object, changed) in

@@ -113,17 +113,18 @@ class AttachmentController: AttributedController {
             .image(UIImage(named: "swift-icon")!, .original(), newline: .none),
             .view(customLabel3, .original(.center), newline: .none),
             .image(UIImage(named: "swift-icon")!, .proposed()),
+//            .string("建", [.font(.size(21))]),
             .view(customLabel4, .original(.center), newline: .none),
             .image(UIImage(named: "swift-icon")!, .proposed()),
-            .view(customLabel5, .original(.center), newline: .none),
-            .string("测试文字超试文字超出范围测试文字超出范围试文字超出范围测试文字超出范围出范围测试文字超出范围", [.font(.size(30))]),
-            .view(customLabel6, .original(.center), newline: .none),
-            .image(UIImage(named: "swift-icon")!, .proposed()),
-            .image(UIImage(named: "swift-icon")!, .proposed()),
+            .view(customLabel5, .original(.center), newline: .none)
+//            .string("测试文字超试文字超出范围测试文字超出范围试文字超出范围测试文字超出范围出范围测试文字超出范围", [.font(.size(30))]),
+//            .view(customLabel6, .original(.center), newline: .none),
+//            .image(UIImage(named: "swift-icon")!, .original()),
 //            .image(UIImage(named: "swift-icon")!, .proposed()),
-            .view(customLabel7, .original(.center), newline: .none),
-            .image(UIImage(named: "swift-icon")!, .proposed()),
-            .view(customLabel8, .original(.center), newline: .none)
+//            .image(UIImage(named: "swift-icon")!, .proposed()),
+//            .view(customLabel7, .original(.center), newline: .none),
+//            .image(UIImage(named: "swift-icon")!, .proposed()),
+//            .view(customLabel8, .original(.center), newline: .none),
 //            .view(customImageView, .original(.origin))
         )
         let attachmentAttributedString4 = AttributedString(
@@ -139,7 +140,7 @@ class AttachmentController: AttributedController {
         
         Label.tag = 10086
         
-        Label.attributed.string = attachmentAttributedString2
+        Label.attributed.string = attachmentAttributedString3
         Label.backgroundColor = .cyan
         
         // 文字间距
@@ -150,7 +151,7 @@ class AttachmentController: AttributedController {
         
         
         tipViewHeight.constant = 300
-        tipLeftMargin.constant = 85//110.4895
+        tipLeftMargin.constant = 197.8631//110.4895
         //   105
         
 //        Label.sizeToFit()

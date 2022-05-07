@@ -126,7 +126,7 @@ extension AttributedStringWrapper where Base: UILabel {
                 let view = AttachmentView(attachment)
                 base.addSubview(view)
                 attachmentViews.append((range, view))
-                view.backgroundColor = .red
+//                view.backgroundColor = .red
             }
         }
         base.attachmentViews = attachmentViews.reversed()
@@ -144,7 +144,6 @@ extension AttributedStringWrapper where Base: UILabel {
         
         // 刷新布局
         base.layout()
-        base.layout1()
         
         // 设置视图相关监听 同步更新布局
 //        observations["bounds"] = base.observe(\.bounds, options: [.new, .old]) { (object, changed) in
@@ -245,40 +244,14 @@ fileprivate extension UILabel {
     }
     
     
-    func layout1() {
-//        let textStorage = NSTextStorage()
-//        let textContainer = NSTextContainer(size: bounds.size)
-//        let layoutManager = NSLayoutManager()
-//
-//        textContainer.lineBreakMode = lineBreakMode
-//        textContainer.lineFragmentPadding = 0.0
-//        textContainer.maximumNumberOfLines = numberOfLines
-//        layoutManager.usesFontLeading = false   // UILabel没有使用FontLeading排版
-//        layoutManager.addTextContainer(textContainer)
-//        textStorage.addLayoutManager(layoutManager)
-//        textStorage.setAttributedString(attributedText!)
-//
-//        // 确保布局
-//        layoutManager.ensureLayout(for: textContainer)
-//        // 获取文本所占高度
-//        let height = layoutManager.usedRect(for: textContainer).height
-//        print("height: \(height)")
-//
-//        let glyphRange = layoutManager.glyphRange(forCharacterRange: NSRange(location: 9, length: 1), actualCharacterRange: nil)
-//        var rect = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
-//
-//        print("rect: \(rect)")
-    }
-    
-    
     func layout(_ isVisible: Bool = false) {
 //        guard !attachmentViews.isEmpty else {
 //            return
 //        }
         
+        
         layoutIfNeeded()
         sizeToFit()
-
         
         let textStorage = NSTextStorage()
         let textContainer = NSTextContainer(size: bounds.size)
@@ -292,12 +265,17 @@ fileprivate extension UILabel {
         textStorage.addLayoutManager(layoutManager)
         textStorage.setAttributedString(attributedText!)
         
-        // 确保布局
-        layoutManager.ensureLayout(for: textContainer)
-        // 获取文本所占高度
-        let rect = layoutManager.usedRect(for: textContainer)
-        print("height: \(rect.height), width: \(rect.width)")
+//        layoutIfNeeded()
+//        sizeToFit()
         
+        // 确保布局
+//        layoutManager.ensureLayout(for: textContainer)
+        // 获取文本所占高度
+//        let rect = layoutManager.usedRect(for: textContainer)
+//        print("height: \(rect.height), width: \(rect.width)")
+        
+//        layoutIfNeeded()
+//        sizeToFit()
         
         let ctframe: CTFrame!
         if self.ctFrame == nil {
@@ -372,6 +350,35 @@ fileprivate extension UILabel {
                         continue
                     }
                     
+                    let range = CTRunGetStringRange(ctRun)
+                    let viewRange = NSRange(location: range.location+1, length: 1)
+                    let glyphRange = layoutManager.glyphRange(forCharacterRange: viewRange, actualCharacterRange: nil)
+                    
+//                    layoutManager.setTextContainer(textContainer, forGlyphRange: NSRange(location: range.location, length: 2))
+                    
+                    let p = CTRunGetPositionsPtr(ctRun)
+                    let point = p!.pointee
+                    
+//                   let b = CTRunGetStringIndicesPtr(ctRun)
+//                    let point = layoutManager.location(forGlyphAt: <#T##Int#>)
+//                    layoutManager.setLocation(point, forStartOfGlyphRange: NSRange(location: range.location, length: 2))
+//
+//                    if imageAttachment.size.width < 20.0 {
+////                        layoutManager.setAttachmentSize(CGSize(width: 20.287109375, height: 20.287109375), forGlyphRange: glyphRange)
+//
+//                        layoutManager.setLineFragmentRect(runRect, forGlyphRange: NSRange(location: range.location, length: 2), usedRect: CGRect(runRect.origin.x + 0.08495 ,runRect.origin.y, 20.287109375, 20.287109375))
+//                    } else {
+////                        layoutManager.setAttachmentSize(imageAttachment.size, forGlyphRange: glyphRange)
+//
+//                        layoutManager.setLineFragmentRect(runRect, forGlyphRange: NSRange(location: range.location, length: 2), usedRect: CGRect(runRect.origin.x + 0.08495 ,runRect.origin.y, imageAttachment.size.width, imageAttachment.size.height))
+//                    }
+                    
+                    
+  
+                    
+                    
+//                    layoutManager.ensureLayout(forCharacterRange: viewRange)
+                    
                     print("image.size: \(imageAttachment.size.width), \(imageAttachment.size.height)  ")
                 } else
                 
@@ -382,21 +389,31 @@ fileprivate extension UILabel {
                     
                     print(ctRun)
                     
+//                    layoutIfNeeded()
                     let range = CTRunGetStringRange(ctRun)
-                    let glyphRange = layoutManager.glyphRange(forCharacterRange: NSRange(location: range.location, length: 1), actualCharacterRange: nil)
+                    
+                    let viewRange = NSRange(location: range.location+1, length: 1)
+                    
+                    let glyphRange = layoutManager.glyphRange(forCharacterRange: viewRange, actualCharacterRange: nil)
+                    
+                    layoutManager.setAttachmentSize(attachmentView.viewAttachment.size, forGlyphRange: glyphRange)
+                    layoutManager.ensureLayout(forCharacterRange: viewRange)
+                    
                     let rect = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
+                    
+                    
                     
                     attachmentView.frame = CGRect(rect.origin.x, rect.origin.y, attachmentView.viewAttachment.size.width, attachmentView.viewAttachment.size.height)
                     
                     print("--->", attachmentView.frame)
-                } else
+                } else  // 换行的viewAttachment
                 if let viewAttachment = runAttributeds[NSAttributedString.Key.attachment], viewAttachment is AttributedString.ViewAttachment {
                     guard let attachmentView = attachmentViews.popLast()?.1 else {
                         continue
                     }
                     
                     let range = CTRunGetStringRange(ctRun)
-                    let glyphRange = layoutManager.glyphRange(forCharacterRange: NSRange(location: range.location, length: 1), actualCharacterRange: nil)
+                    let glyphRange = layoutManager.glyphRange(forCharacterRange: NSRange(location: range.location + 1, length: 1), actualCharacterRange: nil)
                     let rect = layoutManager.boundingRect(forGlyphRange: glyphRange, in: textContainer)
                     
                     attachmentView.frame = CGRect(rect.origin.x, rect.origin.y, attachmentView.viewAttachment.size.width, attachmentView.viewAttachment.size.height)
